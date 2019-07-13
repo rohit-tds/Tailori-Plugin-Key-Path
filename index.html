@@ -1,0 +1,720 @@
+<html> 
+	<head>
+		<link rel="stylesheet" href="files/bootstrap.min.css" />
+		<link rel="stylesheet" href="index.css" />
+		<style>
+			svg{
+				width:25px;
+				height:25px;
+			}
+		</style>
+		
+		<!--//=========================== Plugin dependency ===========================//-->
+
+		<script src = "files/jquery-2.2.4.min.js">  </script>
+		<script src="jsrender.js"></script>
+		<script src = "jquery.tds.js"> </script>
+
+		<!--//=========================== Plugin declaration ===========================//-->
+		<script>
+			var obj =null;
+			
+			var ServiceUrl = "http://cdn.textronic.online"; <!-- Service Url -->
+			
+			var key = "1265336024"; <!-- Key -->
+			
+			var UserName = "abc"; <!-- Your username -->
+			var PassWord = "abc"; <!-- Your password -->
+			var start = 0;
+			
+			var loadlook = true;
+
+			<!-- For getting key ---->
+			$.ajax({
+				url: ServiceUrl+"/v1/LoginUsers?UserName="+UserName+"&PasswordHash="+PassWord,
+				success: function (data) {
+					var Key = data;
+				}
+			});
+
+			<!-- For getting summary ---->
+			var look = null;
+			function summary(){
+				$("#summary-model").html();
+				var canvas = document.getElementById('summary-image');
+				var context = canvas.getContext('2d');
+				var i = 0;
+				var height = 0;
+				var width = 0;
+
+				var img = new Image();
+				var src = $($("#img-div").find("img")[1]).attr("src");
+				if (src != undefined) {
+					img.src = src;
+					height = img.height;
+					width = img.width;
+				}
+
+				$("#img-div").find("img").each(function() {
+					src = $(this).attr("src");
+					if (src != "") {
+						img = new Image();
+						img.src = src;
+						if (i == 0) {
+							if (height == 0) {
+
+								canvas.width = img.width;
+								canvas.height = img.height;
+								if (img.width == 1)
+									i = -1;
+							} else {
+								canvas.width = width;
+								canvas.height = height;
+							}
+						}
+						//alert(img);
+						context.drawImage(img, 0, 0, width, height);
+					}
+
+					i++;
+				});
+
+				$("#summaryModel").modal({
+					keyboard : true,
+					backdrop : "static"
+				});
+
+				$("#summaryModel .modal-dialog").css("width", "-moz-fit-content");
+			}
+			function GetSummary(){
+				var txt="<table class='table table-striped' style='width:110%'>";
+
+				var result = obj.Summary();
+				console.log(result);
+				//alert(result[0].length);
+				txt+="<tr><td colspan=4><center><b>Product Summary</b></center></td></tr>";
+				for(i=0;i<result.ProductSummary.length;i++)
+				{
+					txt+="<tr><td>"+result.ProductSummary[i].Product+"</td><td>"+result.ProductSummary[i].Option+"</td><td>"
+					+result.ProductSummary[i].Feature+"</td></tr>";
+				}
+				if(result.ContrastSummary.length>0){
+					txt+="<tr><td colspan=4><center><b>Contrast Summary</b></center></td></tr>";
+					for(i=0;i<result.ContrastSummary.length;i++)
+					{
+						txt+="<tr><td>"+result.ContrastSummary[i].Product+"</td><td>"+result.ContrastSummary[i].Contrast+"</td><td>"
+						+result.ContrastSummary[i].Fabric+"</td></tr>";
+					}
+				}
+				if(result.FabricSummary.length>0){
+					txt+="<tr><td colspan=4><center><b>Fabric Summary</b></center></td></tr>";
+					for(i=0;i<result.FabricSummary.length;i++)
+					{
+						txt+="<tr><td>"+result.FabricSummary[i].Area+"</td><td>"+result.FabricSummary[i].Name+"</td><td>"
+						+result.FabricSummary[i].Price+"</td></tr>";
+					}
+				}
+				txt+="</table>"
+				$("#sum").empty();
+				$("#sum").append(txt);
+				summary();
+			}
+
+			function GetProduct(){
+				obj.Product($("#product-info").val());
+			}
+
+			function GetLook(){
+				look= obj.Look().Data;
+				alert("Your look save successfully \n Note : If you want to set this look then click on 'Set Look' button");
+			}
+
+			function SetLook(){
+				obj.Look(look);
+			}
+
+			$(document).ready(function () {
+			//alert("hi")
+				<!-- Plugin initialization ---->
+				obj = $("#div-1").tailori({
+
+				//============================ Plugin Options ==============================
+
+				'Product':'Men-Long Kurta',   //Place the prodct where we want to load first i.e men-shirt,men-suit etc.
+				'ProductTemplate':'#theTmpl', //Tempalte id for Product(Detail)
+				'ImageSource':'#img-div', //Container Id for place Images
+				//'SpecificImageSource' : "#img-div2", //Container id for placing specific image
+				'ServiceUrl':ServiceUrl, // Service Url 
+				'Key' : key, // Key
+				'ImageSize' : '1000', //{Used for set image size & o | auto | original For Original Size Image}
+				//'AutoThread' : false, //for auto buttun thread and button hole for button
+				'AutoSpecific':false, //Auto specific view after selecting any feature
+				'AutoAlignment':false, //Auto alignment set according to selected element
+				'Monogram':true, //If monogram 
+				'MonogramTemplate':'#theTmplm', //Tempalte id for Monogram UI
+				'MonogramPlace':'#monoplace', // html containter for Monogram
+
+				//============================ Callback methods ==============================
+
+				'OnProductChange': function(ProductName){	
+	
+					//-----------------------------------------------------------------------------//
+				   // This call back method call when we change  product like men-shirt, men suit //
+				  //-----------------------------------------------------------------------------//
+
+					$("#sec").empty();
+					var data= obj.SpecificDetails();
+
+					$.each(data,function(i,value){
+						$("#sec").append('<li id="'+data[i].Id+'" ><img src="'+ServiceUrl+'/v1/ProductImage?key='+key+'&'+data[i].Id+'" width=40 height=40><p>'+data[i].Name+'</p></li>');
+					});	
+					$("#sec").append('<li class="btn btn-primary" id="zoomout" ><a href="#" style="color:#fff">ZOOM OUT</a></li>');
+
+					$("#sec li").click(function(){	
+						if(this.id == "zoomout")
+							obj.SpecificRender(false);
+						else
+							obj.SpecificRender(this.id);			
+					});
+
+					if(obj.Monogram() != null)
+					{
+						$("#specific").show();
+						$("#monoplace").show();
+					}else{
+						$("#specific").hide();
+						$("#monoplace").hide();
+					}
+				},
+				'OnProductDetailChange':function(DetailId){
+					
+					//------------------------------------------------------------//
+				   // This call back method call when we click/change on Detail  //
+				  //------------------------------------------------------------//
+
+				},
+				'OnOptionChange':function(OptionId){
+					
+					//------------------------------------------------------------//
+				   // This call back method call when we click/change on Option  //
+				  //------------------------------------------------------------//
+
+				},
+				'OnFeatureChange' : function(FeatureId){
+
+					//-------------------------------------------------------//
+				   // This call back method call when we click on Features  //
+				  //-------------------------------------------------------//
+
+					$("#fabrics").show();
+					$("#fabrics1").show();
+					$("#Lfabrics").hide();
+				},
+				'OnRenderImageChange':function(ImageUrls){	
+
+					//--------------------------------------------------------------------------------------//
+				   // This call back method call when all images inside the imagesource loaded completely  //
+				  //--------------------------------------------------------------------------------------//
+				  
+					$("#monogram-placement li").click(function(){
+						$(this).siblings().removeClass("monoselectd");
+						$(this).addClass("monoselectd");
+					});
+					$("#monogram-font li").click(function(){
+						$(this).siblings().removeClass("monoselectd");
+						$(this).addClass("monoselectd");
+					});
+					$("#monogram-color li").click(function(){
+						$(this).siblings().removeClass("monoselectd-color");
+						$(this).addClass("monoselectd-color");
+					});
+				},
+				'OnLibConfigChange' : function(DetailID){
+
+					//-----------------------------------------------------------------------------------------//
+				   // This call back method call when we click on lib config feature like button,tie,trouser  //
+				  //-----------------------------------------------------------------------------------------//
+
+				var name = $(this).find("a").text();
+					$("#Lfabrics").find(".panel-heading").html(name + " Fabrics");
+
+					$.getJSON({
+					url: ServiceUrl+"/v1/Swatches?key="+key+"&id="+DetailID,				
+					success: function (data) {				
+						$("#Lfabrics table").empty();
+						//console.log(data);
+						$.each(data,function(url,value) {
+							$("#Lfabrics table").append('<tr id="'+value['Id']+'" ><td><img style="margin-right:10px" src="'+value['ThumbPath']+'" width=40 height=40><a href="#">'+value['Name']+'</a></td></tr>');
+						});
+						$("#Lfabrics tr").click(function(){
+							obj.LibConfigTexture(this.id);	
+						});
+
+						//$("#fabrics").hide();
+						//$("#fabrics1").hide();
+						$("#Lfabrics").show();
+					},
+					fail: function () {}
+					});
+				}
+				});
+					
+				//======================================================== Methods =============================================================//
+																					
+				/*
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| Sr. |       Method      | Description                                          |                    Example                   |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 1   | Product()         | This method is used for changing(switching) product, | obj.Product("Men-shirt")                     |
+				|     |                   | like men-suit,men-jacket etc                         |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 2   | Texture()         | This method is used for draping full                 |                                              |
+				|     |                   | texture on model.                                    | obj.Texture() (for getting texture)          |
+				|     |                   |                                                      | obj.Texture("red");                          |
+				|     |                   |                                                      | obj.Texture("#ff0000");                      |
+				|     |                   |                                                      | obj.Texture("rgb(255,0,0)");                 |
+				|     |                   |                                                      | obj.Texture("hsl(0, 100%, 50%)");            |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 3   | ContrastTexture() | This method is used for draping texture              |                                              |
+				|     |                   |  on contrast.                                        | obj.ContrastTexture(); (for getting texture) |
+				|     |                   |                                                      | obj.ContrastTexture("red");                  |
+				|     |                   |                                                      | obj.ContrastTexture("#ff0000");              |
+				|     |                   |                                                      | obj.ContrastTexture("rgb(255,0,0)");         |
+				|     |                   |                                                      | obj.ContrastTexture("hsl(0, 100%, 50%)");    |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 4   | SpecificDetails() | This method is use for getting specific details.     | obj.SpecificDetails();                       |
+				|     |                   | You will get Array of Specific Details .             |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 5   | SpecificRender()  | This method is use for getting specific              | obj.SpecificRender(true);                    |
+				|     |                   | rendered image else full rendered image.             |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 6   | Summary()         | This method is use for getting Summay of             | obj.Summary();                               |
+				|     |                   | Product.                                             |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 7   | ResetContrast()   | This method is use for remove all contrast.          | obj.ResetContrast();                         |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 8   | ResetProduct()    | This method is use for reset product.                | obj.ResetProduct();                          |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 9   | Look()            | This method is use for Get or Set Look.              | obj.Look();                                  |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 10  | Options()         | This method is use for getting options of            | obj.Options("158294");                       |
+				|     |                   | product Detail.                                      |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 11  | Features()        | This method is use for getting Features of           | obj.Features("75321598");                    |
+				|     |                   | product Detail.                                      |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 12  | Contrasts()       | This method is use for getting Contrast of           | obj.Contrasts("158294");                     |
+				|     |                   | product Detail.                                      |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 13  | SetTexture()      | This method is use to set fabric or color            | obj.SetTexture({DetailId:FabricId});         |
+				|     |                   | to perticular product Detail.                        | obj.SetTexture({"DFBA128E":"88E1355B",       |
+				|     |                   |                                                      |           "2F21CBFC":"2814C56C"});           |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				
+				data-tds-moption="text"  
+				data-tds-alignment =<"next"/"previous"/ alignment Name >
+				IsOptionVisible
+				*/
+
+				//=========================== Gettign Fabrics ===================================//
+
+				function getSwatches(_that){
+					var end = start+10;
+					$.getJSON({
+						url: ServiceUrl+"/v1/Swatches?key="+key+"&s="+start+"/e="+end,				
+						success: function (data) {
+
+						
+						//$("#fabrics table").empty();
+							//console.log(data);
+							$.each(data,function(url,value) {
+								$("#fabrics table").append('<tr id="'+value['Id']+'" ><td><img style="margin-right:10px" src="'+value['ThumbPath']+'" width=40 height=40><a href="#">'+value['Name']+'</a></td></tr>');
+								$("#fabrics1 table").append('<tr id="'+value['Id']+'" ><td><img style="margin-right:10px" src="'+value['ThumbPath']+'" width=40 height=40><a href="#">'+value['Name']+'</a></td></tr>');					
+							});
+
+							if(start == 0){
+								//------------ set Fabric event ------//
+								$("body").on("click","#fabrics tr",function(){
+								
+									/*if(obj.SetTexture({"DFBA128E":"88E1355B","2F21CBFC":"2814C56C"}))*/
+										obj.Texture(this.id);	
+
+								});
+
+								//-------- set Contrast fabric event-----//
+								$("body").on("click","#fabrics1 tr",function(){
+								
+									obj.ContrastTexture(this.id);
+								
+								});
+								
+								//-------- Fabric scroll event -----//
+								
+								$("#fabrics .panel-body").on("scroll", function() {
+									var scrollHeight = $(this).height();
+									var scrollPosition = $(this).height() + $(this).scrollTop();
+									//console.log(scrollPosition);
+									if ($("#fabrics .panel-body table").height() == scrollPosition) {
+										getSwatches();
+									}
+								});
+								
+								$("#fabrics1 .panel-body").on("scroll", function() {
+									var scrollHeight = $(this).height();
+									var scrollPosition = $(this).height() + $(this).scrollTop();
+									//console.log(scrollPosition);
+									if ($("#fabrics1 .panel-body table").height() == scrollPosition) {
+										getSwatches();
+									}
+								});
+							}
+							
+							start = end;
+
+						},
+						fail: function () {
+							alert("Fabric not found.");
+						},
+						error: function(){
+							alert("Fabric not found.");
+						}
+					});
+				}
+				
+				getSwatches(this);
+
+				//=========================== Gettign all product ===================================//
+				$.getJSON({
+					url: ServiceUrl+"/v1/product?key="+key,				
+					success: function (data) {		
+						var txt = "";
+						$.each(data,function(index,value){
+							txt += "<li><a href='#' class='btn btn-default'>"+index+"</a></li>";
+						});
+						$("#product").html(txt);
+						
+						//------ Product event -------//
+						$("#product li").click(function(){
+							var pr = $(this).find("a").text();
+
+							if(pr.includes("_"))
+								pr = pr.replace("_","-");
+
+							obj.Product(pr);
+						});
+					},
+					fail: function () {}
+				});
+
+			});
+
+		</script>
+
+		<script src="files/bootstrap.min.js"></script>
+
+	</head>
+	<body> 
+		<div class="container-fluid">
+			<div class="row" >
+				<div  class="col-sm-12 col-md-12" > 
+					<a data-tds-alignment="previous" href="#"><span class="glyphicon glyphicon-chevron-left"></span>Previous</a> | 
+					<a data-tds-alignment="face" href="#">Face</a>  |
+					<a data-tds-alignment="back" href="#">Back</a>  |  	
+					<!-- 	<a data-tds-alignment="face open" href="#">Face Open</a>  |
+					<a data-tds-alignment="back open" href="#">Back Open</a>  |   -->
+
+					<a data-tds-alignment="next" href="#">Next <span class="glyphicon glyphicon-chevron-right"></span> </a>
+					<button type="button" onclick="GetSummary()" class="btn btn-default"><span class="glyphicon glyphicon-list-alt">Summary</button>
+
+					<input type="text" id="product-info"/>
+
+					<button type="button" onclick="GetProduct()" class="btn btn-default">Change Product</button>
+
+					<button type="button" onclick="GetLook()" class="btn btn-default">Get Look</button>
+
+					<button type="button" onclick="SetLook()" class="btn btn-default">Set Look</button>
+				</div>
+
+				<div class="col-sm-12"><hr></hr></div>
+
+				<div  class="row">
+					<div class="col-sm-2 col-md-2">
+						<div class="panel panel-primary" >
+							<div class="panel-heading" style="margin-bottom:10px">Product</div>
+							<div class="panel-body" style="padding:10px;">
+								<ul id="product"></ul>
+							</div>
+						</div>
+						<div id="specific" class="panel panel-primary" >
+							<div class="panel-heading" style="margin-bottom:10px">Specific Views</div>
+							<div class="panel-body" style="padding:10px;">
+								<ul id="sec"></ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-2 col-md-2">
+						<div class="panel panel-primary" >
+							<div class="panel-heading" style="margin-bottom:10px">Product Details</div>
+							<div class="panel-body" style="padding:10px;">
+								<div  class="" id = "div-1"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-2 col-md-2">
+						<div class="panel panel-primary" style="display:none" id="Lfabrics">
+							<div class="panel-heading"></div>
+							<div class="panel-body" style="height: 300px; display: block; overflow: auto;">
+								<table class="table" >
+									<tbody >
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="panel panel-primary" id="fabrics">
+							<div class="panel-heading">Fabric for full draping</div>
+							<div class="panel-body" style="height: 300px; display: block; overflow: auto;">
+								<table class="table" >
+									<tbody >
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="panel panel-primary"  id="fabrics1">
+							<div class="panel-heading">Fabric for Contrast</div>
+							<div class="panel-body" style="height: 300px; display: block; overflow: auto;">
+								<table class="table" >
+									<tbody >
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-2 col-md-2" id="monoplace" >
+
+					</div>
+
+					<div class="col-sm-3 col-md-3" >
+						<!-- <div id="loder"></div> -->
+						<div id="img-div"></div>
+						<div id="img-div2"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="summaryModel" class="modal fade" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div style="width:-webkit-fit-content;" class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Product Summary</h4>
+					</div>
+					<div class="modal-body" id="summary-model">
+						<div class="row">
+							<div id="sum" class="col-sm-6">
+								<table class="table" style="width:110%">
+								</table>
+							</div>
+							<div style="overflow:hidden" class="col-sm-6">
+								<canvas id="summary-image" ></canvas>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<center>
+								<button type="button" style="width:auto" class="btn btn-danger" data-dismiss="modal">Close</button>
+							</center>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- =========================================== Jsrender Template ========================================== -->
+
+		<script id="theTmpl2" type="text/x-jsrender">
+
+		<ul>
+			{{for Product}}
+				<li ><img style="max-width:30px;" src="{{:ImageSource}}">{{:Name}} is  <b>{{:Id}} </b></li>
+			{{/for}}
+		</ul>
+
+		<ul>
+			{{for Product}}     
+			<ul class="productlist" data-key="">
+				{{for Options}}
+					<li><img style="max-width:30px;" src="{{:ImageSource}}">{{:Name}} is  <b>{{:Id}}</b></li>
+				{{/for}}
+			</ul>
+			{{/for}}  
+		</ul>
+
+		<ul>
+			{{for Product}}     
+			<ul>
+				{{for Options}}
+				<ul>
+					{{for Features}}
+
+					<li style="cursor: pointer;"  >
+						<img alt="classic" class="collar_image" name="Classic Collar" src="{{:ImageSource}}" title="classic">
+						<!-- <table style="color: rgb(102, 102, 102);" class="table_center_element" border="0"><tbody><tr><td>Classic Collar</td></tr></tbody></table> -->
+						<p class="pFabricName" style="color: #666666;">{{:Name}}</p>
+					</li>
+
+					{{/for}}
+				</ul>
+				{{/for}}
+			</ul>
+			{{/for}}
+		</ul>
+
+		</script>
+
+		<script id="theTmpl" type="text/x-jsrender">
+
+		<div class="panel-group" id="accordion2">
+			{{for Product}}
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{:Id}}">
+								<img style="max-width:30px;" src="{{:ImageSource}}">{{:Name}}
+							</a>
+						</h4>
+					</div>
+					<div id="collapse{{:Id}}" class="panel-collapse collapse">
+						<div class="panel-body" style="max-height:400px;overflow-x:hidden;overflow-y:auto">
+							<table class="table">
+								<tr id="{{:Id}}">
+
+								</tr>
+								{{for Options}}
+									<tr style="background-color:#88b5dd;color:#fff">
+										<td><h5><b>Option :{{:Name}}</h5></b></td>
+									</tr>
+									{{for Features}}		
+										<tr id="{{:Id}}">
+											<td>
+												<img style="margin-right:10px" src="{{:ImageSource}}" width=40 height=40><a href="#">{{:Name}}</a>
+											</td>
+										</tr>
+									{{/for}}							
+								{{/for}}
+								<tr id="{{:Id}}" style="background-color:#88b5dd;color:#fff">
+									<td>
+										<h5><b>Contrast :<b></h5>
+									</td>
+								</tr>
+								{{for Contrasts}}		
+									<tr id="{{:Id}}">
+										<td>
+											<img style="margin-right:10px" src="{{:ImageSource}}" width=40 height=40><a href="#">{{:Name}}</a>
+										</td>
+									</tr>
+								{{/for}}
+							</table >
+						</div>
+					</div>
+				</div>
+			{{/for}}
+		</div>
+
+		</script>
+
+		<script id="theTmpl1" type="text/x-jsrender">
+		<div class="col-md-12">
+			<div class="panel with-nav-tabs panel-default">
+				<div class="panel-heading">
+					<ul class="nav nav-tabs">
+						{{for Product}}                            
+							<li><a href="#tab{{:Id}}" data-toggle="tab"><img style="max-width:30px;" src="{{:ImageSource}}">{{:Name}}</a></li>                          
+						{{/for}}   
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						{{for Product}}					
+							<div class="tab-pane fade " id="tab{{:Id}}">
+								<ul class="list-group">
+									{{for Options}}
+										{{for Features}}
+											<li class="list-group-item" id="{{:Id}}">{{:Name}}</li>						
+										{{/for}}   
+									{{/for}}   
+								</ul>
+							</div>
+						{{/for}}                           
+					</div>
+				</div>
+			</div>
+		</div>	
+		</script>
+
+		<script id="theTmplm" type="text/x-jsrender">
+
+
+		<div class="panel panel-primary ">
+			<div class="panel-heading" role="tab" id="headingMonoConfig">
+			<h4 class="panel-title">
+			<a data-toggle="collapse" data-parent="#accordion1" href="#collapseMonoConfig" aria-expanded="true" aria-controls="collapseMonoConfig" class="">Monogram Configuration</a>
+			</h4>
+			</div>
+			<div id="collapseMonoConfig" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingMonoConfig" aria-expanded="true" style="">
+				<div class="panel-body" style="padding:10px">
+					<div class="form-group" id="Monogram-feature-types">
+						<div aria-multiselectable="true" role="tablist" id="Div1" class="panel-group">
+							<div id="monogram-preview-img" style="display: none;">
+								<img id="monogram-preview" src="" data-tds-moption="preview" alt="" class="img-rounded" style="width: 100%">
+							</div>
+
+							<div class="control-group">
+								<label for="monogram-text" class="control-label"> MonogramText</label> 
+								<input class="form-control" id="monogram-text" data-tds-moption="text" type="text">
+							</div>
+
+							<div class="control-group">
+								<label for="monogram-placement" class="control-label">Monogram Placement</label>
+								<ul  class="monogram" id="monogram-placement">
+									{{for MonogramPlacement}}                            
+										<li id="{{:Id}}">{{:Name}}</li>
+									{{/for}}																															
+								</ul>
+							</div>
+
+							<div class="control-group">
+								<label for="monogram-font" class="control-label"> Monogram Font</label>
+								<ul class="monogram" id="monogram-font">
+									{{for MonogramFont}}                            
+										<li id="{{:Id}}">{{:Name}}</li>
+									{{/for}}																															
+								</ul>
+							</div>
+
+							<div class="control-group">
+								<label for="monogram-color" class="control-label"> Monogram
+								Color</label>
+								<ul class="" id="monogram-color">
+									{{for MonogramColor}}                            
+										<li id="{{:Id}}"><img class="img-polaroid" src="{{:ImageSource}}"><p>{{:Name}}</p></li>											
+									{{/for}}																															
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</script>
+	</body>
+</html>

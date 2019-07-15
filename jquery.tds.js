@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.1 [13d18y]
+ * jQuery tds.tailori plugin v-1.2 [15d18y/l1.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -107,7 +107,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.1 [13d18y] (Path)");
+			console.info("Textronic jquery.tds.js v-1.2 [15d18y/l1.1] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -120,7 +120,7 @@
 				return;
 
 			$.ajax({
-				url: this.Option("CDNPath") + "/raw/upload/v1562769075/TailorI.Admin_FABINDIA/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") + ".json",
+				url: this.Option("CDNPath") + "/raw/upload/v1563183911/TailorI.Admin_FABINDIA/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") + ".json",
 				context: this,
 				dataType : "json",
 				success: function (data) {
@@ -852,12 +852,12 @@
 					
 				
 				
-				var PObject = this._ProductData.filter(function(x){if(x.Id === key) return x});
+				/*var PObject = this._ProductData.filter(function(x){if(x.Id === key) return x});
 				var OObject = PObject[0].Options.filter(function(x){if(x.Id === RenderObject[key].OptionId ) return x});
 				var FObject = OObject[0].Features.filter(function(x){if(x.Id === RenderObject[key].Id ) return x});
 				
 				if(FObject[0].Name.toLowerCase() == "no" || FObject[0].Name.toLowerCase() == "none" || FObject[0].Name.toLowerCase() == "with" || FObject[0].Name.toLowerCase() == "without")
-					continue;
+					continue;*/
 				
 				if(this._RenderObject[key].Swatch != "")
 					Swatch = parseInt(this._RenderObject[key].Swatch,16); 
@@ -914,7 +914,27 @@
 						if(this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index]) !== -1)
 							continue;
 						
-						if(this._FalseImages.Alignment[this._Alignments[this._CurrentAlignmentIndex].Id].single.indexOf(this._RenderObject[key].Id) == -1 ){
+						if(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[key].Id] != undefined){
+							//console.log(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._ReverseLinks[key][index]]]);
+							if(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[key].Id].indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id) == -1){
+								
+								if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + ".png";
+								else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + ".png";
+								else
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped.png";
+								
+								//console.log(SingleLink);
+								if(Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
+									//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
+									Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[]}
+								}
+									
+								Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo].SingleLink.push(SingleLink);
+							
+							}
+						}else{
 							if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
 								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + ".png";
 							else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
@@ -977,7 +997,36 @@
 								if(this._CurrentBlockedDetails.indexOf(this._DoubleLinks[key][fLink][dLink]) !== -1)
 									continue;
 						
-								if(this._FalseImages.Alignment[this._Alignments[this._CurrentAlignmentIndex].Id].double.indexOf(this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id) == -1){
+								if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id] !=  undefined){
+									if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id] != undefined){
+										if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id].indexOf(this._RenderObject[key].Id) == -1){
+											if (Swatch != "")
+												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
+											else
+												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
+										
+											if(Urls[this._RenderObject[key].OrderNo] == undefined){
+												//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
+												Urls[this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[]}
+											}
+											
+											Urls[this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
+										}
+									}else{
+										if (Swatch != "")
+											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
+										else
+											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
+									
+										if(Urls[this._RenderObject[key].OrderNo] == undefined){
+											//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
+											Urls[this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[]}
+										}
+										
+										Urls[this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
+									}
+								}else{
+									//console.log("key "+key+"[fLink] "+fLink+"[dLink] "+dLink);
 									if (Swatch != "")
 										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
 									else
@@ -990,8 +1039,6 @@
 									
 									//console.log(DoubleLink);
 									Urls[this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
-								}else{
-									//console.log("key "+key+"[fLink] "+fLink+"[dLink] "+dLink);
 								}
 							}
 						}
@@ -1002,7 +1049,7 @@
 						continue;
 				}
 				
-				if(this._FalseImages.Alignment[this._Alignments[this._CurrentAlignmentIndex].Id].normal.indexOf(this._RenderObject[key].Id) == -1 ){
+				if(this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id].indexOf(this._RenderObject[key].Id) == -1 ){
 					if(Swatch != "")
 						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + ".png";
 					else

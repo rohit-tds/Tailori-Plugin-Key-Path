@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.2 [15d18y/l1.1]
+ * jQuery tds.tailori plugin v-1.3 [19d18y/l1.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -73,6 +73,8 @@
 		_NoCache  : false,
 		_IsModelImage: false,
 		_ModelId: "",
+		_CachePath: "",
+		_CDNPath: "",
 
 		defaults: {
 			Product: "Men-Shirt",
@@ -101,17 +103,32 @@
 			OnFeatureChange: "",
 			OnContrastChange: "",
 			OnRenderImageChange: "",
-			OnLibConfigChange : "",
-			CachePath: "https://res.cloudinary.com/tdscloudcdn",
-			CDNPath: "https://res.cloudinary.com/tdscloudcdn",
+			OnLibConfigChange : ""
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.2 [15d18y/l1.1] (Path)");
+			console.info("Textronic jquery.tds.js v-1.3 [19d18y/l1.2] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
-			this._setCofiguration(this.Option("Product"));
+			//this._setCofiguration(this.Option("Product"));
+			this._preConfiguration();
 			return this;
+		},
+		
+		_preConfiguration: function (type){
+			$.ajax({
+				url: this.Option("ServiceUrl") + "/api/GetPath?key=" + this.Option("Key"),
+				context: this,
+				dataType : "json",
+				success: function (data) {
+					var that = this;
+					that._CachePath = data.Path;
+					that._CDNPath = data.Path;
+					that._ClientName = data.ClientName;
+					that._setCofiguration(that.Option("Product"));
+				},
+				fail: function () { console.error("Path not found.")}
+			});
 		},
 		
 		_setCofiguration: function (type) {
@@ -120,7 +137,7 @@
 				return;
 
 			$.ajax({
-				url: this.Option("CDNPath") + "/raw/upload/v1563183911/TailorI.Admin_FABINDIA/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") + ".json",
+				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") + ".json/json-file",
 				context: this,
 				dataType : "json",
 				success: function (data) {
@@ -134,7 +151,7 @@
 					that._MPlacement = data.MonogramPlacement;
 					that._MFont = data.MonogramFont;
 					that._MColor = data.MonogramColor;
-					that._ClientName = data.ClientName;
+					//that._ClientName = data.ClientName;
 					that._IsModelImage = data.IsModelImage;
 					that._ModelId = data.ModelId;
 					
@@ -821,7 +838,7 @@
 			var scale = "?h=1000"
 			//var BaseUrl = this.Option("ServiceUrl");
 			//var BaseUrl = "http://cdn.textronic.online";
-			var BaseUrl = this.Option("CachePath");
+			var BaseUrl = this._CachePath;
 			
 			if(BaseUrl.toLowerCase().indexOf("cloudinary") > -1){
 				BaseUrl += "/w_500";
@@ -866,7 +883,7 @@
 				else
 					Swatch = "";
 				
-				var BaseUrl1 = BaseUrl + "/DrappingImages/" + this._ClientName + "/";
+				var BaseUrl1 = BaseUrl + "/" + this._ClientName + "/";
 				var	BaseUrl2 = parseInt(this._Alignments[this._CurrentAlignmentIndex].Id,16)+ "/";
 				//var	BaseUrl2 = parseInt(this._Alignments[1].Id,16)+ "/";
 				
@@ -1087,7 +1104,7 @@
 					Urls[Urls.length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[]};
 			}
 			
-			console.log(Urls);
+			//console.log(Urls);
 			if(this._IsModelImage){
 				$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) +".jpg"+scale+"' style='position:absolute'>");
 			}
@@ -1136,8 +1153,8 @@
 					else
 						that._drapingUrl(that._RenderObject,true);
 			
-					console.log("loaded : "+loadedImage);
-					console.log("unload : "+unloadImage);
+					//console.log("loaded : "+loadedImage);
+					//console.log("unload : "+unloadImage);
 				}
 				//console.log("S : "+$(this).attr('src'));
 			}).error(function(){
@@ -1149,8 +1166,8 @@
 					else
 						that._drapingUrl(that._RenderObject,true);
 		
-					console.log("loaded : "+loadedImage);
-					console.log("unload : "+unloadImage);
+					//console.log("loaded : "+loadedImage);
+					//console.log("unload : "+unloadImage);
 				}
 				//console.log("F : "+$(this).attr('src'));
 			});

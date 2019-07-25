@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.3 [19d18y/l1.2]
+ * jQuery tds.tailori plugin v-1.4 [25d18y/l1.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -107,7 +107,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.3 [19d18y/l1.2] (Path)");
+			console.info("Textronic jquery.tds.js v-1.4 [25d18y/l1.3] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -116,6 +116,12 @@
 		},
 		
 		_preConfiguration: function (type){
+			
+			/*var canvas = document.createElement("canvas");
+				canvas.setAttribute("id","Tds-canvas");
+				canvas.setAttribute("style","display:none");
+				document.body.appendChild(canvas);*/
+					
 			$.ajax({
 				url: this.Option("ServiceUrl") + "/api/GetPath?key=" + this.Option("Key"),
 				context: this,
@@ -706,7 +712,7 @@
 										if(this._SelectedAlignment.length == 0 || this._SelectedAlignment == undefined)
 											this._SelectedAlignment='FACE';
 										for(var l=0;l < this._Alignments.length; l++){
-											if(this._SelectedAlignment.toLowerCase() == this._Alignments[l].toLowerCase()){
+											if(this._SelectedAlignment.toLowerCase() == this._Alignments[l].Name.toLowerCase()){
 												this._CurrentAlignmentIndex = l;
 											}
 										}
@@ -841,7 +847,7 @@
 			var BaseUrl = this._CachePath;
 			
 			if(BaseUrl.toLowerCase().indexOf("cloudinary") > -1){
-				BaseUrl += "/w_500";
+				BaseUrl += "/w_500/v1";
 				scale = "";
 			}
 				
@@ -931,7 +937,8 @@
 						if(this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index]) !== -1)
 							continue;
 						
-						if(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[key].Id] != undefined){
+						if(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id] != undefined 
+							&& this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[key].Id] != undefined){
 							//console.log(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._ReverseLinks[key][index]]]);
 							if(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[key].Id].indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id) == -1){
 								
@@ -1014,7 +1021,8 @@
 								if(this._CurrentBlockedDetails.indexOf(this._DoubleLinks[key][fLink][dLink]) !== -1)
 									continue;
 						
-								if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id] !=  undefined){
+								if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id] != undefined
+								&& this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id] !=  undefined){
 									if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id] != undefined){
 										if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id].indexOf(this._RenderObject[key].Id) == -1){
 											if (Swatch != "")
@@ -1066,7 +1074,8 @@
 						continue;
 				}
 				
-				if(this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id].indexOf(this._RenderObject[key].Id) == -1 ){
+				if(this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id] != undefined 
+				&& this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id].indexOf(this._RenderObject[key].Id) == -1 ){
 					if(Swatch != "")
 						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + ".png";
 					else
@@ -1098,10 +1107,10 @@
 				var monoUrl = this._MonogramText + "," + this._MonogramColorHex + "," + this._MonogramFontName + ",{[" + this._MonogramCordinates + "]}";
 				//abc,#FF0000,Embassy,{[1580,1840,904,580,15,-3]}
 				
-				var MonogramUrl = BaseUrl + "/DrappingImages/Monogram/monogram.php?" + btoa(monoUrl);
+				var MonogramUrl = this.Option("ServiceUrl") + "/DrappingImages/Monogram/monogram.php?" + btoa(monoUrl);
 				
 				if(this._Alignments[this._CurrentAlignmentIndex].Name.toLowerCase() == this._MonogramAlignment.toLowerCase() && monoUrl != "")
-					Urls[Urls.length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[]};
+					Urls[Urls.length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[],"Contrast":[]};
 			}
 			
 			//console.log(Urls);
@@ -1144,7 +1153,7 @@
 			var unloadImage = 0;
 			var lastIndex = $(imgSrc + ' .TdsNew').length;
 			
-			$(imgSrc + ' .TdsNew').load(function() {
+			$(imgSrc + ' .TdsNew').on("load",function() {
 				loadedImage++;
 				imagesArray.push($(this).attr('src'));
 				if(loadedImage == lastIndex){
@@ -1155,9 +1164,13 @@
 			
 					//console.log("loaded : "+loadedImage);
 					//console.log("unload : "+unloadImage);
+					
+					var callback = that.Option("OnRenderImageChange");
+					if (typeof callback == 'function')
+						callback.call(that, imagesArray);
 				}
 				//console.log("S : "+$(this).attr('src'));
-			}).error(function(){
+			}).on("error",function(){
 				unloadImage++;
 				loadedImage++;
 				if(loadedImage == lastIndex){
@@ -1189,10 +1202,6 @@
 				if((1.0 - i).toFixed(1) == 0.0){
 					$(imgSrc + ' .TdsOld').remove();
 					$(imgSrc + ' .unload').remove();
-					
-					var callback = th.Option("OnRenderImageChange");
-					if (typeof callback == 'function')
-						callback.call(th, imagesArray);
 				}
 			},t);
 		},

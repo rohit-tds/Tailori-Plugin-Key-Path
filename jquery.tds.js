@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.4 [25d18y/l1.3]
+ * jQuery tds.tailori plugin v-1.5 [31d07m18y/l1.4]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -75,6 +75,7 @@
 		_ModelId: "",
 		_CachePath: "",
 		_CDNPath: "",
+		_worker: null,
 
 		defaults: {
 			Product: "Men-Shirt",
@@ -103,11 +104,12 @@
 			OnFeatureChange: "",
 			OnContrastChange: "",
 			OnRenderImageChange: "",
-			OnLibConfigChange : ""
+			OnLibConfigChange : "",
+			OnCombineImageLoad: ""
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.4 [25d18y/l1.3] (Path)");
+			console.info("Textronic jquery.tds.js v-1.5 [31d07m18y/l1.4] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -117,11 +119,11 @@
 		
 		_preConfiguration: function (type){
 			
-			/*var canvas = document.createElement("canvas");
+			var canvas = document.createElement("canvas");
 				canvas.setAttribute("id","Tds-canvas");
-				canvas.setAttribute("style","display:none");
-				document.body.appendChild(canvas);*/
-					
+				canvas.setAttribute("style","display:none;position:absolute");
+				document.body.appendChild(canvas);
+				
 			$.ajax({
 				url: this.Option("ServiceUrl") + "/api/GetPath?key=" + this.Option("Key"),
 				context: this,
@@ -838,6 +840,11 @@
 
 		_createUrl: function (RenderObject,IsBlocking,onlycall) {
 			//this._loader();
+			
+			if(this._worker != null)
+				this._worker.terminate();
+			
+			var that = this;
 			this._NoCache = true;
 			this._Url = "";
 			var url = "";
@@ -1075,7 +1082,10 @@
 				}
 				
 				if(this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id] != undefined 
-				&& this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id].indexOf(this._RenderObject[key].Id) == -1 ){
+				&& this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id].indexOf(this._RenderObject[key].Id) > -1 )
+					continue;
+					
+					
 					if(Swatch != "")
 						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + ".png";
 					else
@@ -1096,9 +1106,7 @@
 						}
 						
 					}
-				}else{
-					//console.log("key "+this._RenderObject[key].Id);
-				}
+				
 				
 			}
 			
@@ -1120,34 +1128,44 @@
 			
 			$.each(Urls,function(orderNo,urlobject){
 					//console.log(urlobject);
+					var urls = [];
+					
 					if(urlobject != undefined){
 						if(urlobject.DoubleLink.length > 0){
 							$.each(urlobject.DoubleLink,function(index,value){
-								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale + "' style='position:absolute'>");	
+								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale + "' style='position:absolute'>");
+								//urls.push(value.replace("w_500/",""));
 							});
 						}
 						if(urlobject.SingleLink.length > 0){
 							$.each(urlobject.SingleLink,function(index,value){
-								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale +"' style='position:absolute'>");	
+								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale +"' style='position:absolute'>");
+								//urls.push(value.replace("w_500/",""));								
 							});
 						}
 						if(urlobject.Normal.length > 0){
 							$.each(urlobject.Normal,function(index,value){
-								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale +"' style='position:absolute'>");	
+								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale +"' style='position:absolute'>");
+								//urls.push(value.replace("w_500/",""));
 							});
 						}
 						
 						if(urlobject.Contrast.length > 0){
 							$.each(urlobject.Contrast,function(index,value){
 								$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale +"' style='position:absolute'>");	
+								//urls.push(value.replace("w_500/",""));
 							});
 						}
+						
+						
 					}
+					
+					//that._worker.postMessage(urls);
 					
 					//$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + "' style='position:absolute'>");	
 			});
 			
-			var that = this;
+			
 			var loadedImage = 0;
 			var imagesArray = [];
 			var unloadImage = 0;
@@ -1168,6 +1186,13 @@
 					var callback = that.Option("OnRenderImageChange");
 					if (typeof callback == 'function')
 						callback.call(that, imagesArray);
+					
+					var arr = [];
+					$(imgSrc + ' .TdsNew').each(function(){
+						arr.push(this.src);
+					});
+					
+					that._combineImage(arr);
 				}
 				//console.log("S : "+$(this).attr('src'));
 			}).on("error",function(){
@@ -1504,6 +1529,54 @@
 				}
 			}
 
+		},
+		_combineImage: function (urls) {
+			
+			this._worker = new Worker('combine.js');
+			
+			var canvas = document.getElementById("Tds-canvas");
+			var context = canvas.getContext('2d');
+			var flag = false;
+			var that = this;
+				
+			this._worker.onmessage = function(e) {
+			  //console.log('Message received from worker');
+				var image = new Image();
+					image.onload = function(){
+						
+						if(!flag){
+							canvas.width = this.width;
+							canvas.height = this.height;
+							flag = false;
+						}
+				
+						context.drawImage(image, 0, 0, this.width, this.height);
+						flag++;
+						
+						if(flag == $(".TdsNew").length){
+							
+							//console.log(canvas.toDataURL("image/png"));
+
+							var dataurl = canvas.toDataURL("image/png");
+							
+							$(".TdsNew").last().attr("data-zoom-image",dataurl);
+							flag = 0;
+							context.clearRect(0, 0, canvas.width, canvas.height);
+							
+							var callback = that.Option("OnCombineImageLoad");
+							if (typeof callback == 'function')
+								callback.call(that, dataurl);
+					
+							dataurl = "";
+						}
+						
+					};
+					image.src = e.data;
+			  //console.log(e.data);
+			}
+			
+			this._worker.postMessage(urls);
+			
 		},
 		_linkingBlocking: function () {
 			$.ajax({
@@ -1890,7 +1963,7 @@
 				};
 
 
-				var url = this.Option("ServiceUrl") + "/v1/img?" + this._Url + "&key=" + this.Option("Key");
+				var url = $(".TdsNew").last().attr("data-zoom-image");
 
 				return {
 					'Data': btoa(JSON.stringify(lookData)),
@@ -1898,35 +1971,7 @@
 				};
 			}
 			else if(rawRenderData.toLowerCase() === "image"){
-				var image = "";
-				$.ajax({
-					url: this._ImageUrl,
-					type: "GET",
-					processData: false,
-					async: false,
-					beforeSend: function (xhr) {
-						xhr.overrideMimeType('text/plain; charset=x-user-defined');
-					},
-					success: function (result, textStatus, jqXHR) {       
-						if(result.length < 1){
-							console.error("The Image doesn't exist");
-							return
-						}
-
-						var binary = "";
-						var responseText = jqXHR.responseText;
-						var responseTextLen = responseText.length;
-
-						for ( i = 0; i < responseTextLen; i++ ) {
-							binary += String.fromCharCode(responseText.charCodeAt(i) & 255)
-						}
-						image = "data:image/png;base64," + btoa(binary);
-					},
-					error: function(xhr, textStatus, errorThrown){
-						console.error("Error in getting document "+textStatus);
-					} 
-				});
-				return image;
+				return $(".TdsNew").last().attr("data-zoom-image");
 			}
 			else {
 				var lookData = JSON.parse(atob(rawRenderData));

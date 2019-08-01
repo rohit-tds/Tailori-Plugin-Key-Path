@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.5 [31d07m18y/l1.4]
+ * jQuery tds.tailori plugin v-1.6 [01d08m19y/l1.5]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -109,7 +109,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.5 [31d07m18y/l1.4] (Path)");
+			console.info("Textronic jquery.tds.js v-1.6 [01d08m19y/l1.5] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1100,7 +1100,7 @@
 						var cColor = this._RenderObject[key].Contrast.CColor;
 						var cNo = this._RenderObject[key].Contrast.CNo;
 						if (cSwatch !== "") {
-							ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group" + cNo + "/" + cSwatch + "_"+cNo+".png"; 
+							ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+".png"; 
 							
 							Urls[this._RenderObject[key].OrderNo].Contrast.push(ContrastLink);
 						}

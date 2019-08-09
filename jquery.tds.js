@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.6 [01d08m19y/l1.5]
+ * jQuery tds.tailori plugin v-1.7 [09d08m19y/l1.6]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,6 +98,7 @@
 			AutoThread : true,
 			ImageSize :"",
 			ImageFormat : "jpg",
+			CombineJsPath: "data:text/javascript;base64,aWYgKHR5cGVvZihXb3JrZXIpICE9PSAndW5kZWZpbmVkJykgewoKCW9ubWVzc2FnZSA9IGZ1bmN0aW9uKGUpIHsKCQl2YXIgdXJscyA9IGUuZGF0YTsKCQlpZih0eXBlb2YgdXJscyA9PSAnb2JqZWN0JyAmJiB1cmxzLmxlbmd0aCA+IDApewoJCQkKCQkJdmFyIHJlcXVlc3QgPSBuZXcgWE1MSHR0cFJlcXVlc3QoKTsKCQkJCgkJCXZhciBoZWlnaHQgPSAwOwoJCQl2YXIgd2lkdGggPSAwOwoJCQkKCQkJbG9hZFVybCgwLHVybHMpOwoJCX0KCX0KCQoJZnVuY3Rpb24gbG9hZFVybChjLHVybHMpewoJCXZhciB4aHIgPSBuZXcgWE1MSHR0cFJlcXVlc3QoKTsKCQl4aHIub3BlbignR0VUJywgdXJsc1tjXS5yZXBsYWNlKCd3XzEwMDAnLCd3XzEyMDAnKSwgdHJ1ZSk7CgoJCXhoci5yZXNwb25zZVR5cGUgPSAnYXJyYXlidWZmZXInOwoKCQl4aHIub25sb2FkID0gZnVuY3Rpb24oZSkgewoJCSAgaWYgKHRoaXMuc3RhdHVzID09IDIwMCkgewoJCQl2YXIgdUludDhBcnJheSA9IG5ldyBVaW50OEFycmF5KHRoaXMucmVzcG9uc2UpOwoJCQl2YXIgaSA9IHVJbnQ4QXJyYXkubGVuZ3RoOwoJCQl2YXIgYmluYXJ5U3RyaW5nID0gbmV3IEFycmF5KGkpOwoJCQl3aGlsZSAoaS0tKQoJCQl7CgkJCSAgYmluYXJ5U3RyaW5nW2ldID0gU3RyaW5nLmZyb21DaGFyQ29kZSh1SW50OEFycmF5W2ldKTsKCQkJfQoJCQl2YXIgZGF0YSA9IGJpbmFyeVN0cmluZy5qb2luKCcnKTsKCgkJCXZhciBiYXNlNjQgPSBidG9hKGRhdGEpOwoJCQkKCQkJcG9zdE1lc3NhZ2UoImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCwiK2Jhc2U2NCk7CgkJCQoJCQljKys7CgkJICAKCQkJaWYoYyA8IHVybHMubGVuZ3RoKXsKCQkJCWxvYWRVcmwoYyx1cmxzKQoJCQl9CgkJCQoJCSAgfQoJCX07CgoJCXhoci5zZW5kKCk7Cgl9Cgp9ZWxzZXsKCWNvbnNvbGUuZXJyb3IoJ1dvcmtlciBub3Qgc3VwcG9ydCcpOwp9",
 			OnProductChange: "",
 			OnProductDetailChange: "",
 			OnOptionChange: "",
@@ -109,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.6 [01d08m19y/l1.5] (Path)");
+			console.info("Textronic jquery.tds.js v-1.7 [09d08m19y/l1.6] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1532,7 +1533,7 @@
 		},
 		_combineImage: function (urls) {
 			
-			this._worker = new Worker('combine.js');
+			this._worker = new Worker(this.Option("CombineJsPath"));
 			
 			var canvas = document.getElementById("Tds-canvas");
 			var context = canvas.getContext('2d');

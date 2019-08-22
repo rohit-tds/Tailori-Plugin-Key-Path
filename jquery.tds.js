@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.7 [09d08m19y/l1.6]
+ * jQuery tds.tailori plugin v-1.8 [22d08m19y/l1.7]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -97,7 +97,7 @@
 			AutoAlignment: true,
 			AutoThread : true,
 			ImageSize :"",
-			ImageFormat : "jpg",
+			ImageFormat : "png",
 			CombineJsPath: "data:text/javascript;base64,aWYgKHR5cGVvZihXb3JrZXIpICE9PSAndW5kZWZpbmVkJykgewoKCW9ubWVzc2FnZSA9IGZ1bmN0aW9uKGUpIHsKCQl2YXIgdXJscyA9IGUuZGF0YTsKCQlpZih0eXBlb2YgdXJscyA9PSAnb2JqZWN0JyAmJiB1cmxzLmxlbmd0aCA+IDApewoJCQkKCQkJdmFyIHJlcXVlc3QgPSBuZXcgWE1MSHR0cFJlcXVlc3QoKTsKCQkJCgkJCXZhciBoZWlnaHQgPSAwOwoJCQl2YXIgd2lkdGggPSAwOwoJCQkKCQkJbG9hZFVybCgwLHVybHMpOwoJCX0KCX0KCQoJZnVuY3Rpb24gbG9hZFVybChjLHVybHMpewoJCXZhciB4aHIgPSBuZXcgWE1MSHR0cFJlcXVlc3QoKTsKCQl4aHIub3BlbignR0VUJywgdXJsc1tjXS5yZXBsYWNlKCd3XzEwMDAnLCd3XzEyMDAnKSwgdHJ1ZSk7CgoJCXhoci5yZXNwb25zZVR5cGUgPSAnYXJyYXlidWZmZXInOwoKCQl4aHIub25sb2FkID0gZnVuY3Rpb24oZSkgewoJCSAgaWYgKHRoaXMuc3RhdHVzID09IDIwMCkgewoJCQl2YXIgdUludDhBcnJheSA9IG5ldyBVaW50OEFycmF5KHRoaXMucmVzcG9uc2UpOwoJCQl2YXIgaSA9IHVJbnQ4QXJyYXkubGVuZ3RoOwoJCQl2YXIgYmluYXJ5U3RyaW5nID0gbmV3IEFycmF5KGkpOwoJCQl3aGlsZSAoaS0tKQoJCQl7CgkJCSAgYmluYXJ5U3RyaW5nW2ldID0gU3RyaW5nLmZyb21DaGFyQ29kZSh1SW50OEFycmF5W2ldKTsKCQkJfQoJCQl2YXIgZGF0YSA9IGJpbmFyeVN0cmluZy5qb2luKCcnKTsKCgkJCXZhciBiYXNlNjQgPSBidG9hKGRhdGEpOwoJCQkKCQkJcG9zdE1lc3NhZ2UoImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCwiK2Jhc2U2NCk7CgkJCQoJCQljKys7CgkJICAKCQkJaWYoYyA8IHVybHMubGVuZ3RoKXsKCQkJCWxvYWRVcmwoYyx1cmxzKQoJCQl9CgkJCQoJCSAgfQoJCX07CgoJCXhoci5zZW5kKCk7Cgl9Cgp9ZWxzZXsKCWNvbnNvbGUuZXJyb3IoJ1dvcmtlciBub3Qgc3VwcG9ydCcpOwp9",
 			OnProductChange: "",
 			OnProductDetailChange: "",
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.7 [09d08m19y/l1.6] (Path)");
+			console.info("Textronic jquery.tds.js v-1.8 [22d08m19y/l1.7] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -146,7 +146,7 @@
 				return;
 
 			$.ajax({
-				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") + ".json/json-file",
+				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-2293588000.json/json-file",
 				context: this,
 				dataType : "json",
 				success: function (data) {
@@ -597,8 +597,26 @@
 			var selectedButton,
 				that = this,
 				isButton = false,
-				buttonId = new Array();
+				buttonId = new Array(),
+				swatch = "";
 			if (key === undefined) {
+				
+				var falseArray = new Array();
+			
+				if(this.Swatch != ""){
+					for (key=0; key < this._LibConfig.length;key++) {
+						if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 || 
+						this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1 ||
+						this._LibConfig[key].Name.toLowerCase().indexOf("button holes") > -1){
+							continue;
+						}else{
+							for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
+								falseArray.push(this._LibConfig[key].Options[key1]);
+							}
+
+						}
+					}
+				}
 				
 				var LibconfigName = new Array();
 				for(var l = 0 ; l < that._LibConfig.length ; l++){
@@ -621,7 +639,7 @@
 							OptionId : this._ProductData[dataIndex].Options[0].Id,
 							Alignment : this._ProductData[dataIndex].Options[0].Features[0].Alignment,
 							FeatureAlignments : this._ProductData[dataIndex].Options[0].Features[0].FeatureAlignments,
-							Swatch: "",
+							Swatch: swatch,
 							Color: "",
 							Contrast: {
 								CSwatch : "",
@@ -631,13 +649,16 @@
 							OrderNo : this._ProductData[dataIndex].Options[0].Features[0].DrapeOrderNo
 						};
 					}else{
+						
+						swatch = falseArray.indexOf(this._ProductData[dataIndex].Id) > -1?"":this._Swatch;
+						
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
 							LongId : parseInt(this._ProductData[dataIndex].Options[0].Features[0].Id,16),
 							OptionId : this._ProductData[dataIndex].Options[0].Id,
 							Alignment : this._ProductData[dataIndex].Options[0].Features[0].Alignment,
 							FeatureAlignments : this._ProductData[dataIndex].Options[0].Features[0].FeatureAlignments,
-							Swatch: "",
+							Swatch: swatch,
 							Color: "",
 							Contrast: {
 								CSwatch : "",
@@ -909,39 +930,6 @@
 								continue;
 						}
 				
-						/*if(this._FalseImages.SingleLink[this._RenderObject[this._ReverseLinks[key][index]].Id] != undefined){
-							if(this._FalseImages.SingleLink[this._RenderObject[this._ReverseLinks[key][index]].Id].indexOf(this._ReverseLinks[key].Id) == -1){
-								if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + ".png";
-								else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
-									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].Color + ".png";
-								else
-									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped.png";
-								
-								//console.log(SingleLink);
-								if(Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
-									//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
-									Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[]}
-								}
-									
-								Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo].SingleLink.push(SingleLink);
-							}
-						}else{
-							if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + ".png";
-							else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
-								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + ".png";
-							else
-								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped.png";
-							
-							//console.log(SingleLink);
-							if(Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
-								//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
-								Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[]}
-							}
-								
-							Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo].SingleLink.push(SingleLink);
-						}*/
 						if(this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index]) !== -1)
 							continue;
 						
@@ -951,11 +939,11 @@
 							if(this._FalseImages.SingleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[key].Id].indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id) == -1){
 								
 								if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + ".png";
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + "." + this.Option("ImageFormat");
 								else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
-									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + ".png";
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + "." + this.Option("ImageFormat");
 								else
-									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped.png";
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 								
 								//console.log(SingleLink);
 								if(Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
@@ -968,11 +956,11 @@
 							}
 						}else{
 							if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + ".png";
+								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + "." + this.Option("ImageFormat");
 							else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
-								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + ".png";
+								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + "." + this.Option("ImageFormat");
 							else
-								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped.png";
+								SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 							
 							//console.log(SingleLink);
 							if(Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
@@ -997,35 +985,6 @@
 										continue;
 								}
 								
-								/*if(this._FalseImages.DoubleLink[this._RenderObject[fLink].Id] != undefined){
-									if(this._FalseImages.DoubleLink[this._RenderObject[fLink].Id].indexOf(this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id) == -1){
-										if (Swatch != "")
-											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
-										else
-											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
-									
-										if(Urls[this._RenderObject[key].OrderNo] == undefined){
-											//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
-											Urls[this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[]}
-										}
-										
-										//console.log(DoubleLink);
-										Urls[this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
-									}
-								}else{
-									if (Swatch != "")
-										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
-									else
-										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
-								
-									if(Urls[this._RenderObject[key].OrderNo] == undefined){
-										//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
-										Urls[this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[]}
-									}
-									
-									//console.log(DoubleLink);
-									Urls[this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
-								}*/
 								if(this._CurrentBlockedDetails.indexOf(this._DoubleLinks[key][fLink][dLink]) !== -1)
 									continue;
 						
@@ -1034,9 +993,9 @@
 									if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id] != undefined){
 										if(this._FalseImages.DoubleLink[this._Alignments[this._CurrentAlignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id].indexOf(this._RenderObject[key].Id) == -1){
 											if (Swatch != "")
-												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
+												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
 											else
-												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
+												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 										
 											if(Urls[this._RenderObject[key].OrderNo] == undefined){
 												//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
@@ -1047,9 +1006,9 @@
 										}
 									}else{
 										if (Swatch != "")
-											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
+											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
 										else
-											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
+											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 									
 										if(Urls[this._RenderObject[key].OrderNo] == undefined){
 											//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
@@ -1061,9 +1020,9 @@
 								}else{
 									//console.log("key "+key+"[fLink] "+fLink+"[dLink] "+dLink);
 									if (Swatch != "")
-										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + ".png";
+										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
 									else
-										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped.png";
+										DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 								
 									if(Urls[this._RenderObject[key].OrderNo] == undefined){
 										//Urls[this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = new Array();
@@ -1088,9 +1047,9 @@
 					
 					
 					if(Swatch != "")
-						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + ".png";
+						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
 					else
-						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId  +"/Full/WhiteDrapped.png";
+						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId  +"/Full/WhiteDrapped." + this.Option("ImageFormat");
 				
 					//console.log(NormalImage);
 					Urls[this._RenderObject[key].OrderNo].Normal.push(NormalImage);
@@ -1101,7 +1060,7 @@
 						var cColor = this._RenderObject[key].Contrast.CColor;
 						var cNo = this._RenderObject[key].Contrast.CNo;
 						if (cSwatch !== "") {
-							ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+".png"; 
+							ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+ "." + this.Option("ImageFormat"); 
 							
 							Urls[this._RenderObject[key].OrderNo].Contrast.push(ContrastLink);
 						}
@@ -1124,7 +1083,7 @@
 			
 			//console.log(Urls);
 			if(this._IsModelImage){
-				$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) +".jpg"+scale+"' style='position:absolute'>");
+				$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") +scale+"' style='position:absolute'>");
 			}
 			
 			$.each(Urls,function(orderNo,urlobject){
@@ -1550,6 +1509,9 @@
 							canvas.height = this.height;
 							flag = false;
 						}
+						
+						image.width = canvas.width;
+						image.height = canvas.height;
 				
 						context.drawImage(image, 0, 0, this.width, this.height);
 						flag++;
@@ -1653,7 +1615,7 @@
 			$(this.Option("ImageSource")).find(".old").css("filter","blur(3px)");
 
 		},*/
-		Product: function (product) {
+		Product: function (product,swatch = "") {
 
 			this._Url = "";
 			this._Links = new Object();
@@ -1666,7 +1628,7 @@
 			this._RenderObject = new Object();
 			this._Alignments = new Array();
 			this._CurrentAlignmentIndex = 0;
-			this._Swatch = "";
+			this._Swatch = swatch;
 			this._Color = "";
 			this._CurrentDetail = "";
 			this._CurrentContrastNo = "";
@@ -2067,9 +2029,21 @@
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++)
 					if (this._ProductData[dataIndex].Id == productId)
 						for (var dataIndex1 = 0; dataIndex1 < this._ProductData[dataIndex].Options.length; dataIndex1++)
-							if (this._ProductData[dataIndex].Options[dataIndex1].Id == optionId)
-								return this._ProductData[dataIndex].Options[dataIndex1].Features;
-
+							if (this._ProductData[dataIndex].Options[dataIndex1].Id == optionId){
+								if(this._IsCustomizeOptions && this._CustomizeOptions[0].length > 0){
+									var features = [];
+									for(var fi = 0; fi < this._ProductData[dataIndex].Options[dataIndex1].Features.length; fi++){
+										if(this._CustomizeOptions[0].indexOf(this._ProductData[dataIndex].Options[dataIndex1].Features[fi].Id) == -1)
+											continue;
+										
+										features.push(this._ProductData[dataIndex].Options[dataIndex1].Features[fi]);
+									}
+									return features;
+								}else{
+									return this._ProductData[dataIndex].Options[dataIndex1].Features;
+								}
+							}
+				
 			return null;
 		},
 
@@ -2077,8 +2051,20 @@
 			if (productId !== undefined && productId !== "")
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++)
 					if (this._ProductData[dataIndex].Id == productId) {
-						var options = $.merge([], this._ProductData[dataIndex].Options);
-						return options;
+						if(this._IsCustomizeOptions && this._CustomizeOptions[1].length > 0){
+							var options = [];
+							for(var oi = 0; oi < this._ProductData[dataIndex].Options.length; oi++){
+								if(this._CustomizeOptions[1].indexOf(this._ProductData[dataIndex].Options[oi].Id) == -1)
+									continue;
+								
+								options.push(this._ProductData[dataIndex].Options[oi]);
+							}
+							return options;
+						}else{
+							var options = $.merge([], this._ProductData[dataIndex].Options);
+							return options;
+						}
+						
 					}
 
 			return null;

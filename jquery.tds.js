@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.8 [22d08m19y/l1.7]
+ * jQuery tds.tailori plugin v-1.9 [30d08m19y/l1.8]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 			AutoThread : true,
 			ImageSize :"",
 			ImageFormat : "png",
-			CombineJsPath: "data:text/javascript;base64,aWYgKHR5cGVvZihXb3JrZXIpICE9PSAndW5kZWZpbmVkJykgewoKCW9ubWVzc2FnZSA9IGZ1bmN0aW9uKGUpIHsKCQl2YXIgdXJscyA9IGUuZGF0YTsKCQlpZih0eXBlb2YgdXJscyA9PSAnb2JqZWN0JyAmJiB1cmxzLmxlbmd0aCA+IDApewoJCQkKCQkJdmFyIHJlcXVlc3QgPSBuZXcgWE1MSHR0cFJlcXVlc3QoKTsKCQkJCgkJCXZhciBoZWlnaHQgPSAwOwoJCQl2YXIgd2lkdGggPSAwOwoJCQkKCQkJbG9hZFVybCgwLHVybHMpOwoJCX0KCX0KCQoJZnVuY3Rpb24gbG9hZFVybChjLHVybHMpewoJCXZhciB4aHIgPSBuZXcgWE1MSHR0cFJlcXVlc3QoKTsKCQl4aHIub3BlbignR0VUJywgdXJsc1tjXS5yZXBsYWNlKCd3XzEwMDAnLCd3XzEyMDAnKSwgdHJ1ZSk7CgoJCXhoci5yZXNwb25zZVR5cGUgPSAnYXJyYXlidWZmZXInOwoKCQl4aHIub25sb2FkID0gZnVuY3Rpb24oZSkgewoJCSAgaWYgKHRoaXMuc3RhdHVzID09IDIwMCkgewoJCQl2YXIgdUludDhBcnJheSA9IG5ldyBVaW50OEFycmF5KHRoaXMucmVzcG9uc2UpOwoJCQl2YXIgaSA9IHVJbnQ4QXJyYXkubGVuZ3RoOwoJCQl2YXIgYmluYXJ5U3RyaW5nID0gbmV3IEFycmF5KGkpOwoJCQl3aGlsZSAoaS0tKQoJCQl7CgkJCSAgYmluYXJ5U3RyaW5nW2ldID0gU3RyaW5nLmZyb21DaGFyQ29kZSh1SW50OEFycmF5W2ldKTsKCQkJfQoJCQl2YXIgZGF0YSA9IGJpbmFyeVN0cmluZy5qb2luKCcnKTsKCgkJCXZhciBiYXNlNjQgPSBidG9hKGRhdGEpOwoJCQkKCQkJcG9zdE1lc3NhZ2UoImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCwiK2Jhc2U2NCk7CgkJCQoJCQljKys7CgkJICAKCQkJaWYoYyA8IHVybHMubGVuZ3RoKXsKCQkJCWxvYWRVcmwoYyx1cmxzKQoJCQl9CgkJCQoJCSAgfQoJCX07CgoJCXhoci5zZW5kKCk7Cgl9Cgp9ZWxzZXsKCWNvbnNvbGUuZXJyb3IoJ1dvcmtlciBub3Qgc3VwcG9ydCcpOwp9",
+			CombineJsPath: "data:text/javascript;base64,b25tZXNzYWdlID0gZnVuY3Rpb24oZSkgewoJdmFyIHVybHMgPSBlLmRhdGE7CglpZih0eXBlb2YgdXJscyA9PSAnb2JqZWN0JyAmJiB1cmxzLmxlbmd0aCA+IDApewoJCQoJCXZhciByZXF1ZXN0ID0gbmV3IFhNTEh0dHBSZXF1ZXN0KCk7CgkJCgkJdmFyIGhlaWdodCA9IDA7CgkJdmFyIHdpZHRoID0gMDsKCQkKCQlsb2FkVXJsKDAsdXJscyk7Cgl9Cn0KCmZ1bmN0aW9uIGxvYWRVcmwoYyx1cmxzKXsKCQoJdmFyIHhociA9IG5ldyBYTUxIdHRwUmVxdWVzdCgpOwoJCgl4aHIub3BlbignR0VUJyx1cmxzW2NdLnJlcGxhY2UoJ3dfMTAwMCcsJ3dfMTIwMCcpICwgdHJ1ZSk7CgoJeGhyLnJlc3BvbnNlVHlwZSA9ICdhcnJheWJ1ZmZlcic7CgoJeGhyLm9ubG9hZCA9IGZ1bmN0aW9uKGUpIHsKCSAgaWYgKHRoaXMuc3RhdHVzID09IDIwMCkgewoJCXZhciB1SW50OEFycmF5ID0gbmV3IFVpbnQ4QXJyYXkodGhpcy5yZXNwb25zZSk7CgkJdmFyIGkgPSB1SW50OEFycmF5Lmxlbmd0aDsKCQl2YXIgYmluYXJ5U3RyaW5nID0gbmV3IEFycmF5KGkpOwoJCXdoaWxlIChpLS0pCgkJewoJCSAgYmluYXJ5U3RyaW5nW2ldID0gU3RyaW5nLmZyb21DaGFyQ29kZSh1SW50OEFycmF5W2ldKTsKCQl9CgkJdmFyIGRhdGEgPSBiaW5hcnlTdHJpbmcuam9pbignJyk7CgoJCS8vdmFyIGJhc2U2NCA9IGJ0b2EoZGF0YSk7CgkJCgkJLy9wb3N0TWVzc2FnZSgiZGF0YTppbWFnZS9wbmc7YmFzZTY0LCIrYmFzZTY0KTsKCQlwb3N0TWVzc2FnZShkYXRhKTsKCQkKCQljKys7CgkgIAoJCWlmKGMgPCB1cmxzLmxlbmd0aCl7CgkJCWxvYWRVcmwoYyx1cmxzKQoJCX0KCQkKCSAgfQoJICAKCSAgLy9wb3N0TWVzc2FnZSgiaGVsbG8iKTsKCX07CgoJeGhyLnNlbmQoKTsKfQ==",
 			OnProductChange: "",
 			OnProductDetailChange: "",
 			OnOptionChange: "",
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.8 [22d08m19y/l1.7] (Path)");
+			console.info("Textronic jquery.tds.js v-1.9 [30d08m19y/l1.8] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -146,7 +146,7 @@
 				return;
 
 			$.ajax({
-				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-2293588000.json/json-file",
+				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") +".json/json-file",
 				context: this,
 				dataType : "json",
 				success: function (data) {
@@ -1181,10 +1181,10 @@
 				}
 			});
 		},
-		_effect : function(imgSrc,i,t,that,th,imagesArray){
+		_effect : function(imgSrc,i,t,imagesArray){
 			setTimeout(function(){
-				$(that).css('opacity',i);
-				if((1.0 - i).toFixed(1) == 0.0){
+				$(imgSrc).find('.TdsNew').css('opacity',i);
+				if((1.0 - i).toFixed(1) == 0.0){	
 					$(imgSrc + ' .TdsOld').remove();
 					$(imgSrc + ' .unload').remove();
 				}
@@ -1453,34 +1453,29 @@
 							
 							var that = this;
 							var loadedImage = 0;
-							$(imgSrc + ' .TdsNew').css('opacity','1');
-							$(imgSrc + ' .TdsOld').remove();
-							
-							var callback = this.Option("OnRenderImageChange");
-							if (typeof callback == 'function')
-								callback.call(this, imagesArray);
-							
-							/*$(imgSrc + ' .TdsNew').off('load');
+
 							$(imgSrc + ' .TdsNew').on('load', function() {
-								//console.log($(this).attr('c')); 
+								//console.log($(this).attr('c'));
 								loadedImage++;
 								if(loadedImage == $(imgSrc + ' .TdsNew').length){
-									
+
 									//$(imgSrc + ' .TdsNew').css('opacity','1');
 									for (var i = 0,t=50; i < 1.0; i += 0.1) {
-										that._effect(imgSrc,i.toFixed(1).toString(),t);
+										that._effect(imgSrc,i.toFixed(1).toString(),t,imagesArray);
 										t =t+50;
 									}
 									//$(imgSrc + ' .TdsOld').remove();
 									loadedImage = 0;
-									
+
 									var callback = that.Option("OnRenderImageChange");
 									if (typeof callback == 'function')
 									callback.call(that, imagesArray);
+								
+									that._combineImage(imagesArray);
 								}
 							}).each(function() {
 							  if(this.complete) $(this).load();
-							});*/
+							});
 							
 						}
 					},
@@ -1492,53 +1487,59 @@
 		},
 		_combineImage: function (urls) {
 			
-			this._worker = new Worker(this.Option("CombineJsPath"));
+			if(typeof(Worker) !== "undefined"){
+				this._worker = new Worker(this.Option("CombineJsPath"));
 			
-			var canvas = document.getElementById("Tds-canvas");
-			var context = canvas.getContext('2d');
-			var flag = false;
-			var that = this;
-				
-			this._worker.onmessage = function(e) {
-			  //console.log('Message received from worker');
-				var image = new Image();
-					image.onload = function(){
-						
-						if(!flag){
-							canvas.width = this.width;
-							canvas.height = this.height;
-							flag = false;
-						}
-						
-						image.width = canvas.width;
-						image.height = canvas.height;
-				
-						context.drawImage(image, 0, 0, this.width, this.height);
-						flag++;
-						
-						if(flag == $(".TdsNew").length){
-							
-							//console.log(canvas.toDataURL("image/png"));
-
-							var dataurl = canvas.toDataURL("image/png");
-							
-							$(".TdsNew").last().attr("data-zoom-image",dataurl);
-							flag = 0;
-							context.clearRect(0, 0, canvas.width, canvas.height);
-							
-							var callback = that.Option("OnCombineImageLoad");
-							if (typeof callback == 'function')
-								callback.call(that, dataurl);
+				var canvas = document.getElementById("Tds-canvas");
+				var context = canvas.getContext('2d');
+				var flag = false;
+				var that = this;
 					
-							dataurl = "";
-						}
+				this._worker.onmessage = function(e) {
+				  //console.log('Message received from worker');
+					var base64 = "data:image/png;base64," + btoa(e.data);
+		
+					var image = new Image();
+						image.onload = function(){
+							
+							if(!flag){
+								canvas.width = this.width;
+								canvas.height = this.height;
+								flag = false;
+							}
+							
+							image.width = canvas.width;
+							image.height = canvas.height;
+					
+							context.drawImage(image, 0, 0, this.width, this.height);
+							flag++;
+							
+							if(flag == $(".TdsNew").length){
+								
+								//console.log(canvas.toDataURL("image/png"));
+
+								var dataurl = canvas.toDataURL("image/png");
+								
+								$(".TdsNew").last().attr("data-zoom-image",dataurl);
+								flag = 0;
+								context.clearRect(0, 0, canvas.width, canvas.height);
+								
+								var callback = that.Option("OnCombineImageLoad");
+								if (typeof callback == 'function')
+									callback.call(that, dataurl);
 						
-					};
-					image.src = e.data;
-			  //console.log(e.data);
+								dataurl = "";
+							}
+							
+						};
+						image.src = base64;
+				  //console.log(e.data);
+				}
+				
+				this._worker.postMessage(urls);
+			}else{
+				console.warn("Worker not support.")
 			}
-			
-			this._worker.postMessage(urls);
 			
 		},
 		_linkingBlocking: function () {
@@ -1615,8 +1616,11 @@
 			$(this.Option("ImageSource")).find(".old").css("filter","blur(3px)");
 
 		},*/
-		Product: function (product,swatch = "") {
+		Product: function (product,swatch) {
 
+			if(!swatch)
+				swatch = "";
+			
 			this._Url = "";
 			this._Links = new Object();
 			this._ReverseLinks = new Object();

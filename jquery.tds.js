@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.9 [30d08m19y/l1.8]
+ * jQuery tds.tailori plugin v-2.0 [18d09m19y/l1.9]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.9 [30d08m19y/l1.8] (Path)");
+			console.info("Textronic jquery.tds.js v-2.0 [18d09m19y/l1.9] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1449,7 +1449,7 @@
 							this._drapingUrl(this._RenderObject,true,onlycall);
 							console.log("any");
 						} else {
-							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/V2/img?key="+this.Option("Key") + "&"+ raw + "/type=5");
+							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/v1/img?key="+this.Option("Key") + "&"+ raw + "/type=5");
 							
 							var that = this;
 							var loadedImage = 0;

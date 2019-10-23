@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.0 [18d09m19y/l1.9]
+ * jQuery tds.tailori plugin v-2.1 [23d10m19y/l2.0]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.0 [18d09m19y/l1.9] (Path)");
+			console.info("Textronic jquery.tds.js v-2.1 [23d10m19y/l2.0] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1041,6 +1041,19 @@
 						continue;
 				}
 				
+				if(this._RenderObject[key].Contrast.CSwatch !== "" || this._RenderObject[key].Contrast.CColor !== ""){
+					
+					var cSwatch = parseInt(this._RenderObject[key].Contrast.CSwatch,16);
+					var cColor = this._RenderObject[key].Contrast.CColor;
+					var cNo = this._RenderObject[key].Contrast.CNo;
+					if (cSwatch !== "") {
+						ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+ "." + this.Option("ImageFormat"); 
+						
+						Urls[this._RenderObject[key].OrderNo].Contrast.push(ContrastLink);
+					}
+					
+				}
+				
 				if(this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id] != undefined 
 				&& this._FalseImages.Normal[this._Alignments[this._CurrentAlignmentIndex].Id].indexOf(this._RenderObject[key].Id) > -1 )
 					continue;
@@ -1053,19 +1066,6 @@
 				
 					//console.log(NormalImage);
 					Urls[this._RenderObject[key].OrderNo].Normal.push(NormalImage);
-					
-					if(this._RenderObject[key].Contrast.CSwatch !== "" || this._RenderObject[key].Contrast.CColor !== ""){
-					
-						var cSwatch = parseInt(this._RenderObject[key].Contrast.CSwatch,16);
-						var cColor = this._RenderObject[key].Contrast.CColor;
-						var cNo = this._RenderObject[key].Contrast.CNo;
-						if (cSwatch !== "") {
-							ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+ "." + this.Option("ImageFormat"); 
-							
-							Urls[this._RenderObject[key].OrderNo].Contrast.push(ContrastLink);
-						}
-						
-					}
 				
 				
 			}

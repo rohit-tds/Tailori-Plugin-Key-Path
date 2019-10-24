@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.1 [23d10m19y/l2.0]
+ * jQuery tds.tailori plugin v-2.2 [24d10m19y/l2.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.1 [23d10m19y/l2.0] (Path)");
+			console.info("Textronic jquery.tds.js v-2.2 [24d10m19y/l2.1] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -146,7 +146,7 @@
 				return;
 
 			$.ajax({
-				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +"-"+ this.Option("Key") +".json/json-file",
+				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +".json/json-file",
 				context: this,
 				dataType : "json",
 				success: function (data) {

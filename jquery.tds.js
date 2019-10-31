@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.2 [24d10m19y/l2.1]
+ * jQuery tds.tailori plugin v-2.3 [31d10m19y/l2.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.2 [24d10m19y/l2.1] (Path)");
+			console.info("Textronic jquery.tds.js v-2.3 [31d10m19y/l2.2] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -2062,6 +2062,16 @@
 									continue;
 								
 								options.push(this._ProductData[dataIndex].Options[oi]);
+								if(this._CustomizeOptions[1].length > 0){
+									var features = [];
+									for(var fi = 0; fi < this._ProductData[dataIndex].Options[oi].Features.length; fi++){
+										if(this._CustomizeOptions[0].indexOf(this._ProductData[dataIndex].Options[oi].Features[fi].Id) == -1)
+											continue;
+										
+										features.push(this._ProductData[dataIndex].Options[oi].Features[fi]);
+									}
+									options[options.length - 1].Features = features;
+								}
 							}
 							return options;
 						}else{

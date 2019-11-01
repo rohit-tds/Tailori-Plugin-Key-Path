@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.3 [31d10m19y/l2.2]
+ * jQuery tds.tailori plugin v-2.4 [01d11m19y/l2.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -110,7 +110,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.3 [31d10m19y/l2.2] (Path)");
+			console.info("Textronic jquery.tds.js v-2.4 [01d11m19y/l2.3] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -161,7 +161,7 @@
 					that._MFont = data.MonogramFont;
 					that._MColor = data.MonogramColor;
 					//that._ClientName = data.ClientName;
-					that._IsModelImage = data.IsModelImage;
+					//that._IsModelImage = data.IsModelImage;
 					that._ModelId = data.ModelId;
 					
 					that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
@@ -1082,7 +1082,7 @@
 			}
 			
 			//console.log(Urls);
-			if(this._IsModelImage){
+			if(this._Alignments[this._CurrentAlignmentIndex].IsModelImage){
 				$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") +scale+"' style='position:absolute'>");
 			}
 			
@@ -2058,6 +2058,9 @@
 						if(this._IsCustomizeOptions && this._CustomizeOptions[1].length > 0){
 							var options = [];
 							for(var oi = 0; oi < this._ProductData[dataIndex].Options.length; oi++){
+								
+								
+								
 								if(this._CustomizeOptions[1].indexOf(this._ProductData[dataIndex].Options[oi].Id) == -1)
 									continue;
 								

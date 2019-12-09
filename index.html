@@ -19,7 +19,7 @@
 		<script>
 			var obj =null;
 			
-			var ServiceUrl = "https://api.textronic.online"; <!-- Service Url -->
+			var ServiceUrl = "http://api.textronic.online"; <!-- Service Url -->
 
 			
 			var key = "2293588000"; <!-- Key -->
@@ -143,10 +143,12 @@
 
 				'Product':'Men-Shirt',   //Place the prodct where we want to load first i.e men-shirt,men-suit etc.
 				'ProductTemplate':'#theTmpl', //Tempalte id for Product(Detail)
-				'ImageSource':'#img-div', //Container Id for place Images
+				'ImageSource':'#img-div',//Container Id for place Images
 				//'SpecificImageSource' : "#img-div2", //Container id for placing specific image
 				'ServiceUrl':ServiceUrl, // Service Url 
 				'Key' : key, // Key
+				'CombineJsPath' : 'combine.js',// For combine image
+				//'Swatch' : 'C62CB09F',
 				'ImageSize' : '1000', //{Used for set image size & o | auto | original For Original Size Image}
 				//'AutoThread' : false, //for auto buttun thread and button hole for button
 				'AutoSpecific':false, //Auto specific view after selecting any feature
@@ -216,6 +218,20 @@
 					//--------------------------------------------------------------------------------------//
 				   // This call back method call when all images inside the imagesource loaded completely  //
 				  //--------------------------------------------------------------------------------------//
+				  
+					console.log(obj._Alignments); // For getting all alignments
+					console.log(ImageUrls);
+					$("#alignmentImage").empty();
+					var str = "<ul>"
+					for(var i = 0; i < ImageUrls.length; i++ ){
+						str += "<li data-tds-alignment='" + obj._Alignments[i].Name + "'>";
+						for(var j = 0; j < ImageUrls[i].length; j++){
+							str	+= "<img src='" + ImageUrls[i][j] + "'>";
+						}
+						str	+= "</li>";
+					}
+					str += "</ul>";
+					$("#alignmentImage").html(str);
 				  
 					$("#monogram-placement li").click(function(){
 						$(this).siblings().removeClass("monoselectd");
@@ -506,6 +522,16 @@
 						<!-- <div id="loder"></div> -->
 						<div id="img-div"></div>
 						<div id="img-div2"></div>
+					</div>
+					<div class="col-sm-1 col-md-1" id="alignmentImage">
+						<ul>
+							<li>
+							</li>
+							<li>
+							</li>
+							<li>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

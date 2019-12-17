@@ -31,7 +31,7 @@
     text-align: center;
     width: 100px;
 }
- body{margin-top:50px;}
+ body{margin-top:50px;overflow:hidden}
 .glyphicon { margin-right:10px; }
 .panel-body { padding:0px; }
 .panel-body table tr td { padding-left: 15px }
@@ -350,4 +350,35 @@ background-repeat:no-repeat;
 #sec li:hover{
 	border:1px solid #000;
 	cursor:pointer;
+}
+#monoplace .panel-body {
+	    height: 665px;
+		overflow: auto;
+}
+#alignmentImage ul{
+	list-style-type:none;
+	padding:0;
+	margin:0;
+}
+#alignmentImage ul li{
+	width: 80px;
+    height: 80px;
+    border: 1px solid #337ab7;
+    margin: 10px;
+    border-radius: 10px;
+	overflow:hidden;
+	position:relative;
+}
+#alignmentImage ul li:hover{
+	cursor:pointer;
+}
+#alignmentImage ul li img{
+	display: block;
+    max-width: 100%;
+    max-height: 98%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%
 }

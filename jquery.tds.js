@@ -111,7 +111,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.5 [09d12m19y/l2.4] (Path)");
+			console.info("Textronic jquery.tds.js v-2.6 [17d12m19y/l2.5] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1065,7 +1065,7 @@
 						Urls[alignmentIndex][this._RenderObject[key].OrderNo].Normal.push(NormalImage);
 					
 					
-						if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "" && !this._IsSpecific) {
+						if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "") {
 							//monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
 							var monoUrl = this._MonogramText + "," + this._MonogramColorHex + "," + this._MonogramFontName + ",{[" + this._MonogramCordinates + "]}";
 							//abc,#FF0000,Embassy,{[1580,1840,904,580,15,-3]}
@@ -1073,7 +1073,7 @@
 							var MonogramUrl = this.Option("ServiceUrl") + "/DrappingImages/Monogram/monogram.php?" + btoa(monoUrl);
 							
 							if(this._Alignments[alignmentIndex].Name.toLowerCase() == this._MonogramAlignment.toLowerCase() && monoUrl != "")
-								Urls[alignmentIndex][Urls.length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""};
+								Urls[alignmentIndex][Urls[alignmentIndex].length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""};
 						}
 						
 						//console.log(Urls);

@@ -111,7 +111,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.6 [17d12m19y/l2.5] (Path)");
+			console.info("Textronic jquery.tds.js v-2.6 [13d01m20y/l2.6] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1079,7 +1079,8 @@
 						//console.log(Urls);
 						if(this._Alignments[alignmentIndex].IsModelImage){
 								/*$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") +scale+"' style='position:absolute'>");*/
-								Urls[alignmentIndex].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
+								//Urls[alignmentIndex].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
+								Urls[alignmentIndex][this._RenderObject[key].OrderNo].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
 						}
 						
 					}
@@ -1124,6 +1125,9 @@
 									//$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + value + scale +"' style='position:absolute'>");	
 									//urls.push(value.replace("w_500/",""));
 								});
+							}
+							if(urlobject.ModelImage != ""){
+								that._AlignmentsUrl[index].push(urlobject.ModelImage);
 							}
 							
 							

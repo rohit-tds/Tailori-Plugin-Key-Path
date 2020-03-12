@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.7 [13d01m20y/l2.6]
+ * jQuery tds.tailori plugin v-2.8 [12d03m20y/l2.7]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -111,7 +111,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.7 [13d01m20y/l2.6] (Path)");
+			console.info("Textronic jquery.tds.js v-2.8 [12d03m20y/l2.7] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -239,6 +239,9 @@
 						that._MonogramCordinates = $('[data-tds-mcord]:eq(0)').attr("data-tds-mcord");
 						that._MonogramFontName = $('[data-tds-mfontn]:eq(0)').attr("data-tds-mfontn");
 						that._MonogramColorHex = $('[data-tds-mcolorhex]:eq(0)').attr("data-tds-mcolorhex");
+						
+						if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
+							that._MonogramAlignment = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment;
 
 						$("body").on("click", "[data-tds-mplace]", function () {
 							that._MonogramPlacement = $(this).data("tds-mplace");
@@ -890,80 +893,59 @@
 			$(imgSrc).find('.TdsNew').removeClass('TdsNew').addClass('TdsOld');
 			
 			if(!IsAlignment){
+			for(var alignmentIndex = 0; alignmentIndex < this._Alignments.length; alignmentIndex++){
 				for (var key in RenderObject) {
-					for(var alignmentIndex = 0; alignmentIndex < this._Alignments.length; alignmentIndex++){
-						if(IsBlocking){
-							if (this._CurrentBlockedDetails.indexOf(key) !== -1)
+					if(IsBlocking){
+						if (this._CurrentBlockedDetails.indexOf(key) !== -1)
+						continue;
+						if (this._CurrentBlockedFeatures.indexOf(RenderObject[key].Id) !== -1)
 							continue;
-							if (this._CurrentBlockedFeatures.indexOf(RenderObject[key].Id) !== -1)
-								continue;
-						}
+					}
+					
+					if(Urls[alignmentIndex] == undefined){
+						//Urls[this._RenderObject[key].OrderNo] = new Array();
+						Urls[alignmentIndex] = [];
+						Urls[alignmentIndex][this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
+					}else if(Urls[alignmentIndex][this._RenderObject[key].OrderNo] == undefined){
+						Urls[alignmentIndex][this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
+					} 
 						
-						if(Urls[alignmentIndex] == undefined){
-							//Urls[this._RenderObject[key].OrderNo] = new Array();
-							Urls[alignmentIndex] = [];
-							Urls[alignmentIndex][this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
-						}else if(Urls[alignmentIndex][this._RenderObject[key].OrderNo] == undefined){
-							Urls[alignmentIndex][this._RenderObject[key].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
-						} 
+					
+					
+					/*var PObject = this._ProductData.filter(function(x){if(x.Id === key) return x});
+					var OObject = PObject[0].Options.filter(function(x){if(x.Id === RenderObject[key].OptionId ) return x});
+					var FObject = OObject[0].Features.filter(function(x){if(x.Id === RenderObject[key].Id ) return x});
+					
+					if(FObject[0].Name.toLowerCase() == "no" || FObject[0].Name.toLowerCase() == "none" || FObject[0].Name.toLowerCase() == "with" || FObject[0].Name.toLowerCase() == "without")
+						continue;*/
+					
+					if(this._RenderObject[key].Swatch != "")
+						Swatch = parseInt(this._RenderObject[key].Swatch,16); 
+					else if(this._RenderObject[key].Color != "")
+						Swatch = this._RenderObject[key].LongId + this._RenderObject[key].Color;
+					else
+						Swatch = "";
+					
+					var BaseUrl1 = BaseUrl + "/" + this._ClientName + "/";
+					var	BaseUrl2 = parseInt(this._Alignments[alignmentIndex].Id,16)+ "/";
+					//var	BaseUrl2 = parseInt(this._Alignments[1].Id,16)+ "/";
+					
+					if (this._ReverseLinks[key] !== undefined){
+						for (var index=0;index < this._ReverseLinks[key].length;index++) {
 							
-						
-						
-						/*var PObject = this._ProductData.filter(function(x){if(x.Id === key) return x});
-						var OObject = PObject[0].Options.filter(function(x){if(x.Id === RenderObject[key].OptionId ) return x});
-						var FObject = OObject[0].Features.filter(function(x){if(x.Id === RenderObject[key].Id ) return x});
-						
-						if(FObject[0].Name.toLowerCase() == "no" || FObject[0].Name.toLowerCase() == "none" || FObject[0].Name.toLowerCase() == "with" || FObject[0].Name.toLowerCase() == "without")
-							continue;*/
-						
-						if(this._RenderObject[key].Swatch != "")
-							Swatch = parseInt(this._RenderObject[key].Swatch,16); 
-						else if(this._RenderObject[key].Color != "")
-							Swatch = this._RenderObject[key].LongId + this._RenderObject[key].Color;
-						else
-							Swatch = "";
-						
-						var BaseUrl1 = BaseUrl + "/" + this._ClientName + "/";
-						var	BaseUrl2 = parseInt(this._Alignments[alignmentIndex].Id,16)+ "/";
-						//var	BaseUrl2 = parseInt(this._Alignments[1].Id,16)+ "/";
-						
-						if (this._ReverseLinks[key] !== undefined){
-							for (var index=0;index < this._ReverseLinks[key].length;index++) {
-								
-								if(this._Alignments[alignmentIndex].Name.toLowerCase() != RenderObject[this._ReverseLinks[key][index]].Alignment.toLowerCase()){
-									if(RenderObject[this._ReverseLinks[key][index]].FeatureAlignments.indexOf(this._Alignments[alignmentIndex].Name) == -1)
-										continue;
-								}
-						
-								if(this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index]) !== -1)
+							if(this._Alignments[alignmentIndex].Name.toLowerCase() != RenderObject[this._ReverseLinks[key][index]].Alignment.toLowerCase()){
+								if(RenderObject[this._ReverseLinks[key][index]].FeatureAlignments.indexOf(this._Alignments[alignmentIndex].Name) == -1)
 									continue;
-								
-								if(this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id] != undefined 
-									&& this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[key].Id] != undefined){
-									//console.log(this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._ReverseLinks[key][index]]]);
-									if(this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[key].Id].indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id) == -1){
-										
-										if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-											SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + "." + this.Option("ImageFormat");
-										else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
-											SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + "." + this.Option("ImageFormat");
-										else
-											SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
-										
-										//console.log(SingleLink);
-										if(Urls[alignmentIndex] == undefined){
-											//Urls[this._RenderObject[key].OrderNo] = new Array();
-											Urls[alignmentIndex] = [];
-											Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
-										}else if(Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
-											Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
-										} 
-										
-											
-										Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo].SingleLink.push(SingleLink);
+							}
+					
+							if(this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index]) !== -1)
+								continue;
+							
+							if(this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id] != undefined 
+								&& this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[key].Id] != undefined){
+								//console.log(this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._ReverseLinks[key][index]]]);
+								if(this._FalseImages.SingleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[key].Id].indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id) == -1){
 									
-									}
-								}else{
 									if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
 										SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + "." + this.Option("ImageFormat");
 									else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
@@ -979,113 +961,132 @@
 									}else if(Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
 										Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
 									} 
+									
 										
 									Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo].SingleLink.push(SingleLink);
+								
 								}
+							}else{
+								if(this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + parseInt(this._RenderObject[this._ReverseLinks[key][index]].Swatch,16) + "." + this.Option("ImageFormat");
+								else if(this._RenderObject[this._ReverseLinks[key][index]].Color != "")
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/" + this._RenderObject[this._ReverseLinks[key][index]].LongId + this._RenderObject[this._ReverseLinks[key][index]].Color + "." + this.Option("ImageFormat");
+								else
+									SingleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[this._ReverseLinks[key][index]].LongId + "/" + this._RenderObject[key].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 								
-							}
-						}
-						
-						if (this._DoubleLinks.hasOwnProperty(key)) {
-							var DoubleLinkUrl = "";
-								for (var fLink in this._DoubleLinks[key]) {
+								//console.log(SingleLink);
+								if(Urls[alignmentIndex] == undefined){
+									//Urls[this._RenderObject[key].OrderNo] = new Array();
+									Urls[alignmentIndex] = [];
+									Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
+								}else if(Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] == undefined){
+									Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""}
+								} 
 									
-									for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
-										
-										if(this._Alignments[alignmentIndex].Name.toLowerCase() != RenderObject[this._DoubleLinks[key][fLink][dLink]].Alignment.toLowerCase()){
-											if(RenderObject[this._DoubleLinks[key][fLink][dLink]].FeatureAlignments.indexOf(this._Alignments[alignmentIndex].Name) == -1)
-												continue;
-										}
-										
-										if(this._CurrentBlockedDetails.indexOf(this._DoubleLinks[key][fLink][dLink]) !== -1)
-											continue;
+								Urls[alignmentIndex][this._RenderObject[this._ReverseLinks[key][index]].OrderNo].SingleLink.push(SingleLink);
+							}
+							
+						}
+					}
+					
+					if (this._DoubleLinks.hasOwnProperty(key)) {
+						var DoubleLinkUrl = "";
+							for (var fLink in this._DoubleLinks[key]) {
 								
-										if(this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id] != undefined
-										&& this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id] !=  undefined){
-											if(this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id] != undefined){
-												if(this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id].indexOf(this._RenderObject[key].Id) == -1){
-													if (Swatch != "")
-														DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
-													else
-														DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
-													
-													Urls[alignmentIndex][this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
-												}
-											}else{
+								for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
+									
+									if(this._Alignments[alignmentIndex].Name.toLowerCase() != RenderObject[this._DoubleLinks[key][fLink][dLink]].Alignment.toLowerCase()){
+										if(RenderObject[this._DoubleLinks[key][fLink][dLink]].FeatureAlignments.indexOf(this._Alignments[alignmentIndex].Name) == -1)
+											continue;
+									}
+									
+									if(this._CurrentBlockedDetails.indexOf(this._DoubleLinks[key][fLink][dLink]) !== -1)
+										continue;
+							
+									if(this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id] != undefined
+									&& this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id] !=  undefined){
+										if(this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id] != undefined){
+											if(this._FalseImages.DoubleLink[this._Alignments[alignmentIndex].Id][this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id][this._RenderObject[fLink].Id].indexOf(this._RenderObject[key].Id) == -1){
 												if (Swatch != "")
 													DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
 												else
 													DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
-											
+												
 												Urls[alignmentIndex][this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
 											}
 										}else{
-											//console.log("key "+key+"[fLink] "+fLink+"[dLink] "+dLink);
 											if (Swatch != "")
 												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
 											else
 												DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
 										
-											//console.log(DoubleLink);
 											Urls[alignmentIndex][this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
 										}
+									}else{
+										//console.log("key "+key+"[fLink] "+fLink+"[dLink] "+dLink);
+										if (Swatch != "")
+											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
+										else
+											DoubleLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].LongId + "/" + this._RenderObject[fLink].LongId + "/Full/WhiteDrapped." + this.Option("ImageFormat");
+									
+										//console.log(DoubleLink);
+										Urls[alignmentIndex][this._RenderObject[key].OrderNo].DoubleLink.push(DoubleLink);
 									}
 								}
-						}
-						
-						if(this._Alignments[alignmentIndex].Name.toLowerCase() != RenderObject[key].Alignment.toLowerCase()){
-							if(RenderObject[key].FeatureAlignments.indexOf(this._Alignments[alignmentIndex].Name) == -1 && RenderObject[key].Alignment != "" )
-								continue;
-						}
-						
-						if(this._RenderObject[key].Contrast.CSwatch !== "" || this._RenderObject[key].Contrast.CColor !== ""){
-							
-							var cSwatch = parseInt(this._RenderObject[key].Contrast.CSwatch,16);
-							var cColor = this._RenderObject[key].Contrast.CColor;
-							var cNo = this._RenderObject[key].Contrast.CNo;
-							if (cSwatch !== "") {
-								ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+ "." + this.Option("ImageFormat"); 
-								
-								Urls[alignmentIndex][this._RenderObject[key].OrderNo].Contrast.push(ContrastLink);
 							}
-							
-						}
-						
-						if(this._FalseImages.Normal[this._Alignments[alignmentIndex].Id] != undefined 
-						&& this._FalseImages.Normal[this._Alignments[alignmentIndex].Id].indexOf(this._RenderObject[key].Id) > -1 )
+					}
+					
+					if(this._Alignments[alignmentIndex].Name.toLowerCase() != RenderObject[key].Alignment.toLowerCase()){
+						if(RenderObject[key].FeatureAlignments.indexOf(this._Alignments[alignmentIndex].Name) == -1 && RenderObject[key].Alignment != "" )
 							continue;
-							
-							
-						if(Swatch != "")
-							NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
-						else
-							NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId  +"/Full/WhiteDrapped." + this.Option("ImageFormat");
+					}
 					
-						//console.log(NormalImage);
-						Urls[alignmentIndex][this._RenderObject[key].OrderNo].Normal.push(NormalImage);
-					
-					
-						if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "") {
-							//monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
-							var monoUrl = this._MonogramText + "," + this._MonogramColorHex + "," + this._MonogramFontName + ",{[" + this._MonogramCordinates + "]}";
-							//abc,#FF0000,Embassy,{[1580,1840,904,580,15,-3]}
-							
-							var MonogramUrl = this.Option("ServiceUrl") + "/DrappingImages/Monogram/monogram.php?" + btoa(monoUrl);
-							
-							if(this._Alignments[alignmentIndex].Name.toLowerCase() == this._MonogramAlignment.toLowerCase() && monoUrl != "")
-								Urls[alignmentIndex][Urls[alignmentIndex].length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""};
-						}
+					if(this._RenderObject[key].Contrast.CSwatch !== "" || this._RenderObject[key].Contrast.CColor !== ""){
 						
-						//console.log(Urls);
-						if(this._Alignments[alignmentIndex].IsModelImage){
-								/*$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") +scale+"' style='position:absolute'>");*/
-								//Urls[alignmentIndex].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
-								Urls[alignmentIndex][this._RenderObject[key].OrderNo].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
+						var cSwatch = parseInt(this._RenderObject[key].Contrast.CSwatch,16);
+						var cColor = this._RenderObject[key].Contrast.CColor;
+						var cNo = this._RenderObject[key].Contrast.CNo;
+						if (cSwatch !== "") {
+							ContrastLink = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + "Group_" + cNo + "/" + cSwatch + "_"+cNo+ "." + this.Option("ImageFormat"); 
+							
+							Urls[alignmentIndex][this._RenderObject[key].OrderNo].Contrast.push(ContrastLink);
 						}
 						
 					}
-				}
 					
+					if(this._FalseImages.Normal[this._Alignments[alignmentIndex].Id] != undefined 
+					&& this._FalseImages.Normal[this._Alignments[alignmentIndex].Id].indexOf(this._RenderObject[key].Id) > -1 )
+						continue;
+						
+						
+					if(Swatch != "")
+						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId + "/Full/" + Swatch + "." + this.Option("ImageFormat");
+					else
+						NormalImage = BaseUrl1 + BaseUrl2 + this._RenderObject[key].LongId  +"/Full/WhiteDrapped." + this.Option("ImageFormat");
+				
+					//console.log(NormalImage);
+					Urls[alignmentIndex][this._RenderObject[key].OrderNo].Normal.push(NormalImage);
+				
+				}	
+				if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "") {
+					//monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
+					var monoUrl = this._MonogramText + "," + this._MonogramColorHex + "," + this._MonogramFontName + ",{[" + this._MonogramCordinates + "]}";
+					//abc,#FF0000,Embassy,{[1580,1840,904,580,15,-3]}
+					
+					var MonogramUrl = this.Option("ServiceUrl") + "/DrappingImages/Monogram/monogram.php?" + btoa(monoUrl);
+					
+					if(this._Alignments[alignmentIndex].Name.toLowerCase() == this._MonogramAlignment.toLowerCase() && monoUrl != "")
+						Urls[alignmentIndex][Urls[alignmentIndex].length] = {"Normal":[MonogramUrl],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""};
+				}
+				
+				//console.log(Urls);
+				if(this._Alignments[alignmentIndex].IsModelImage){
+						/*$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") +scale+"' style='position:absolute'>");*/
+						//Urls[alignmentIndex].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
+						Urls[alignmentIndex][this._RenderObject[key].OrderNo].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
+				}
+			}
+				
 				//console.log(Urls);
 				//var this._AlignmentsUrl = [];
 				this._AlignmentsUrl = [];
@@ -1529,8 +1530,8 @@
 						image.onload = function(){
 							
 							if(!flag){
-								canvas.width = this.width;
-								canvas.height = this.height;
+								canvas.width = $(".TdsNew").width() + ($(".TdsNew").width() * 0.20); 
+								canvas.height = $(".TdsNew").height() + ($(".TdsNew").height() * 0.20);
 								flag = false;
 							}
 							
@@ -2042,6 +2043,7 @@
 			this._Swatch = "";
 			this._Color = "";
 			this._SelectedAlignment = "FACE";
+			this._CurrentAlignmentIndex = 0;
 			this._MonogramPlacement = "";
 			this._MonogramColor = "";
 			this._MonogramFont = "";

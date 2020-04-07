@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.8 [12d03m20y/l2.7]
+ * jQuery tds.tailori plugin v-2.9 [07d04m20y/l2.8]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -100,6 +100,7 @@
 			ImageSize :"",
 			ImageFormat : "png",
 			CombineJsPath: "data:text/javascript;base64,b25tZXNzYWdlID0gZnVuY3Rpb24oZSkgewoJdmFyIHVybHMgPSBlLmRhdGE7CglpZih0eXBlb2YgdXJscyA9PSAnb2JqZWN0JyAmJiB1cmxzLmxlbmd0aCA+IDApewoJCQoJCXZhciByZXF1ZXN0ID0gbmV3IFhNTEh0dHBSZXF1ZXN0KCk7CgkJCgkJdmFyIGhlaWdodCA9IDA7CgkJdmFyIHdpZHRoID0gMDsKCQkKCQlsb2FkVXJsKDAsdXJscyk7Cgl9Cn0KCmZ1bmN0aW9uIGxvYWRVcmwoYyx1cmxzKXsKCQoJdmFyIHhociA9IG5ldyBYTUxIdHRwUmVxdWVzdCgpOwoJCgl4aHIub3BlbignR0VUJyx1cmxzW2NdLnJlcGxhY2UoJ3dfMTAwMCcsJ3dfMTIwMCcpICwgdHJ1ZSk7CgoJeGhyLnJlc3BvbnNlVHlwZSA9ICdhcnJheWJ1ZmZlcic7CgoJeGhyLm9ubG9hZCA9IGZ1bmN0aW9uKGUpIHsKCSAgaWYgKHRoaXMuc3RhdHVzID09IDIwMCkgewoJCXZhciB1SW50OEFycmF5ID0gbmV3IFVpbnQ4QXJyYXkodGhpcy5yZXNwb25zZSk7CgkJdmFyIGkgPSB1SW50OEFycmF5Lmxlbmd0aDsKCQl2YXIgYmluYXJ5U3RyaW5nID0gbmV3IEFycmF5KGkpOwoJCXdoaWxlIChpLS0pCgkJewoJCSAgYmluYXJ5U3RyaW5nW2ldID0gU3RyaW5nLmZyb21DaGFyQ29kZSh1SW50OEFycmF5W2ldKTsKCQl9CgkJdmFyIGRhdGEgPSBiaW5hcnlTdHJpbmcuam9pbignJyk7CgoJCS8vdmFyIGJhc2U2NCA9IGJ0b2EoZGF0YSk7CgkJCgkJLy9wb3N0TWVzc2FnZSgiZGF0YTppbWFnZS9wbmc7YmFzZTY0LCIrYmFzZTY0KTsKCQlwb3N0TWVzc2FnZShkYXRhKTsKCQkKCQljKys7CgkgIAoJCWlmKGMgPCB1cmxzLmxlbmd0aCl7CgkJCWxvYWRVcmwoYyx1cmxzKQoJCX0KCQkKCSAgfQoJICAKCSAgLy9wb3N0TWVzc2FnZSgiaGVsbG8iKTsKCX07CgoJeGhyLnNlbmQoKTsKfQ==",
+			CombineImageScale: 0.40,
 			OnProductChange: "",
 			OnProductDetailChange: "",
 			OnOptionChange: "",
@@ -111,7 +112,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.8 [12d03m20y/l2.7] (Path)");
+			console.info("Textronic jquery.tds.js v-2.9 [07d04m20y/l2.8] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1530,8 +1531,8 @@
 						image.onload = function(){
 							
 							if(!flag){
-								canvas.width = $(".TdsNew").width() + ($(".TdsNew").width() * 0.20); 
-								canvas.height = $(".TdsNew").height() + ($(".TdsNew").height() * 0.20);
+								canvas.width = $(".TdsNew").width() + ($(".TdsNew").width() * that.Option("CombineImageScale")); 
+								canvas.height = $(".TdsNew").height() + ($(".TdsNew").height() * that.Option("CombineImageScale"));
 								flag = false;
 							}
 							

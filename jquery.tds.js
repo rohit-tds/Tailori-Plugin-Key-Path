@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.9 [07d04m20y/l2.8]
+ * jQuery tds.tailori plugin v-2.10 [10d04m20y/l2.9]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -108,11 +108,12 @@
 			OnContrastChange: "",
 			OnRenderImageChange: "",
 			OnLibConfigChange : "",
-			OnCombineImageLoad: ""
+			OnCombineImageLoad: "",
+			CombineImageBackgroudColor:"#FFFFFF"
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.9 [07d04m20y/l2.8] (Path)");
+			console.info("Textronic jquery.tds.js v-2.10 [10d04m20y/l2.9] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1533,6 +1534,8 @@
 							if(!flag){
 								canvas.width = $(".TdsNew").width() + ($(".TdsNew").width() * that.Option("CombineImageScale")); 
 								canvas.height = $(".TdsNew").height() + ($(".TdsNew").height() * that.Option("CombineImageScale"));
+								context.fillStyle = that.Option("CombineImageBackgroudColor");
+								context.fillRect(0, 0, canvas.width, canvas.height);
 								flag = false;
 							}
 							
